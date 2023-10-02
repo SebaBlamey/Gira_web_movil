@@ -26,7 +26,8 @@ const LoginScreen: React.FC = () => {
 				value={password}
 				onChangeText={text => setPassword(text)}
 			/>
-			<Button title='Iniciar Sesion' onPress={handleLogin} />
+			<Button
+			 	title='Iniciar Sesion' onPress={handleLogin} />
 		</View>
 	);
 };
@@ -36,10 +37,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor:'#183D3D',
 	},
 	header: {
 		fontSize: 24,
 		marginBottom: 20,
+		color: '#fff',
 	},
 	input: {
 		width: '80%',
@@ -48,7 +51,8 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: '#ccc',
 		borderRadius: 5,
-	}
+		backgroundColor: '#93B1A6'
+	},
 });
 
 export default LoginScreen;
