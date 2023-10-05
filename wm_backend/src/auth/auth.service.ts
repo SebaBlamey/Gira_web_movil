@@ -10,14 +10,31 @@ export class AuthService {
 		private readonly userRepository: Repository<UserEntity>,
 	){}
 
-	async login (loginData: {username: string; password: string}){
+	async login (loginData: {email: string; password: string}){
+		if(loginData.email == "" || loginData.password == ""){
+			throw new Error('Campos vacios')
+		}
 		const user = await this.userRepository.findOne({
-			where: {username: loginData.username, password: loginData.password },
+			where: {email: loginData.email, password: loginData.password },
 		});
 
 		if(!user){
 			throw new Error('Credenciales incorrectas')
 		}
 		return user;
+	}
+	async register (userData: {email: string,username: string, password: string}){
+		if(userData.email == "" || userData.username == "" || userData.password == ""){
+			throw new Error('Campos vacios')
+		}
+		const existingUser = await this.userRepository.findOne({
+			where: {email: userData.email}
+		});
+		if(existingUser){
+			throw new Error('Usuario ya registrado')
+		}
+		const newUser = this.userRepository.create(userData)
+		await this.userRepository.save(newUser)
+		return newUser;
 	}
 }
