@@ -7,7 +7,14 @@ const Stack = createStackNavigator();
 
 const StackNavigator: React.FC = () =>{
 	return (
-	<Stack.Navigator initialRouteName="Start">
+	<Stack.Navigator initialRouteName="Start"
+		screenOptions={{
+			headerStyle:{
+				backgroundColor: '#183D3D'
+			},
+			headerTintColor: '#0000'
+		}}
+		>
 		<Stack.Screen name="Start" component={StartScreen} />
 		<Stack.Screen name="Login" component={LoginScreen} />
 	</Stack.Navigator>
