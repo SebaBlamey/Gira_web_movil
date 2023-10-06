@@ -37,4 +37,27 @@ export class AuthService {
 		await this.userRepository.save(newUser)
 		return newUser;
 	}
+	async deleteAccount(userEmail: string){
+		const user = await this.userRepository.findOne({
+			where: {email: userEmail}
+		});
+		if(!user){
+			throw new Error('Usuario no encontrado');
+		}
+		await this.userRepository.remove(user)
+		return true;
+	}
+	async getPassword(userData: {email: string}){
+		if(userData.email == ""){
+			throw new Error('Campos vacios')
+		}
+		const existingUser = await this.userRepository.findOne({
+			where: {email: userData.email}
+		});
+		if(existingUser){
+			return existingUser.password;
+		}else{
+			throw new Error('Usuario no registrado')
+		}
+	}
 }

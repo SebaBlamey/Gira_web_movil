@@ -11,13 +11,37 @@ const LoginScreen: React.FC = () => {
   const [username, setUsename] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+  const [forgotPasswordResponse, setForgotPasswordResponse] = useState("");
+  const handleForgotPass = async () => {
+  	if(!username){
+		Alert.alert("Error","Ingrese su correo")
+		return;
+	}
+	try{
+		const response = await fetch('http://127.0.0.1:3000/auth/getPassword',{
+			method: "POST",
+			headers: {
+				"Content-Type":"application/json",
+			},
+			body: JSON.stringify({
+				email:username
+			}),
+		});
+		if(response.ok){
+			Alert.alert(response.toString())
+		}
+	}
+	catch( error){
+		console.error("Error")
+	}
+  };
   const handleLogin = async () => {
 	if(!username || !password){
 		Alert.alert("Error", "Todos los campos son obligatorios");
 		return;
 	}
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch("http://127.0.0.1:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,11 +84,32 @@ const LoginScreen: React.FC = () => {
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
-      <Pressable style={smallButton.style} onPress={handleLogin}>
+
+	<Pressable style={smallButton.style} onPress={handleLogin}>
         <Text style={smallButton.text}>{"Iniciar"}</Text>
       </Pressable>
+	<Pressable style = {styles.forgotPasswordButton} onPress={handleForgotPass}>
+		<Text style={styles.forgotPasswordText}>Olvide mi contrasena</Text>
+	</Pressable>
+	{forgotPasswordResponse ? (
+		<Text style={styles.forgotPasswordResponse}>{forgotPasswordResponse}</Text>
+	): null}	
     </View>
   );
 };
+const styles = StyleSheet.create({
+  forgotPasswordButton: {
+    marginTop: 10,
+    alignSelf: "center",
+  },
+  forgotPasswordText: {
+    color: "#0DF5E3",
+    textDecorationLine: "underline",
+  },
+  forgotPasswordResponse: {
+    marginTop: 10,
+    alignSelf: "center",
+  },
+});
 
 export default LoginScreen;
