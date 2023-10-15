@@ -17,7 +17,7 @@ const RegisterScreen: React.FC = () => {
         return;
     }
     try{
-        const response = await fetch("http://127.0.0.1:3000/auth/register", {
+        const response = await fetch("http://localhost:3000/users/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

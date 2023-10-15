@@ -5,7 +5,11 @@
             "type": "docker",
             "request": "launch",
             "preLaunchTask": "docker-run: debug",
-            "platform": "node"
+            "platform": "node",
+            "node": {
+                "package": "${workspaceFolder}/node_modules/@nestjs/cli/package.json",
+                "localRoot": "${workspaceFolder}/node_modules/@nestjs/cli"
+            }
         }
     ]
 }
