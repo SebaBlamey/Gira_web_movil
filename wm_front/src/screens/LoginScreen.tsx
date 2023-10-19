@@ -1,45 +1,69 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import normalInput from "./components/input";
 import container from "./components/container";
-import {header} from "./components/header";
-import {smallButton} from "./components/button";
+import { header } from "./components/header";
+import { smallButton } from "./components/button";
 import { Pressable } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const LoginScreen: React.FC = () => {
   const [username, setUsename] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
   const [forgotPasswordResponse, setForgotPasswordResponse] = useState("");
+  const [allcamps, setAllcamps] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
+  const [existingUser, setExistingUser] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+    }, [])
+  );
+  const isEmailValid = (email: string) => {
+    const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    return emailPattern.test(email);
+  };
   const handleForgotPass = async () => {
-  	if(!username){
-		Alert.alert("Error","Ingrese su correo")
-		return;
-	}
-	try{
-		const response = await fetch('http://10.0.2.2:3000/auth/getPassword',{
-			method: "POST",
-			headers: {
-				"Content-Type":"application/json",
-			},
-			body: JSON.stringify({
-				email:username
-			}),
-		});
-		if(response.ok){
-			Alert.alert(response.toString())
-		}
-	}
-	catch( error){
-		console.error("Error")
-	}
+    try {
+      const response = await fetch("http://10.0.2.2:3000/auth/getPassword", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: username,
+        }),
+      });
+      if (response.ok) {
+        Alert.alert(response.toString());
+      }
+    } catch (error) {
+      console.error("Error");
+    }
   };
   const handleLogin = async () => {
-	if(!username || !password){
-		Alert.alert("Error", "Todos los campos son obligatorios");
-		return;
-	}
+    if (!username || !password) {
+      setAllcamps(false);
+      return;
+    }
+    if (!isEmailValid(username)) {
+      setEmailValid(false);
+      return;
+    }
+
+    setLoading(true);
     try {
       const response = await fetch("http://10.0.2.2:3000/users/login", {
         method: "POST",
@@ -54,10 +78,15 @@ const LoginScreen: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Inicio de sesión exitoso", data);
-        navigation.navigate("UserScreen",{userData: data});
-      } else {
-        console.error("Error al iniciar sesión");
+        setTimeout(() => {
+          navigation.navigate("UserScreen", { userData: data });
+        }, 2000);
+        setLoading(false);
+      } else if (response.status == 409) {
+        const errorResponse = await response.json();
+        if (errorResponse.message) {
+          setExistingUser(true);
+        }
       }
     } catch (error) {
       console.error("Error de red", error);
@@ -67,33 +96,61 @@ const LoginScreen: React.FC = () => {
   return (
     <View style={container.style}>
       <Text style={header.style}>Iniciar Sesion</Text>
-	  <Text style={header.subheader}>Por favor, ingrese para continuar</Text>
+      <Text style={header.subheader}>Por favor, ingrese para continuar</Text>
+      {emailValid || !username ? null : (
+        <Text style={{ color: "red" }}>{"El correo no es valido"}</Text>
+      )}
       <TextInput
         style={normalInput.input}
         placeholder="Correo"
-		placeholderTextColor="#454052"
-
+        placeholderTextColor="#454052"
         value={username}
-        onChangeText={(text) => setUsename(text)}
+        onChangeText={(text) => {
+          setUsename(text);
+          setEmailValid(isEmailValid(text));
+          setAllcamps(true);
+        }}
       />
       <TextInput
         style={normalInput.input}
         placeholder="****"
-		placeholderTextColor="#454052"
+        placeholderTextColor="#454052"
         secureTextEntry
         value={password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={(text) => {
+          setPassword(text);
+          setAllcamps(true);
+        }}
       />
-
-	<Pressable style={smallButton.style} onPress={handleLogin}>
-        <Text style={smallButton.text}>{"Iniciar"}</Text>
+      <Text style={{ color: "red" }}>
+        {!allcamps ? "Todos los campos son obligatorios" : ""}
+      </Text>
+      <Text style={{ color: "red" }}>
+        {!existingUser ? "" : "El correo o la contrasena son incorrectos."}
+      </Text>
+      <Pressable
+        style={smallButton.style}
+        onPress={handleLogin}
+        disabled={!loading}
+      >
+        {!loading ? (
+          <ActivityIndicator size="small" color="#201A30" />
+        ) : (
+          <Text style={smallButton.text}>{"Iniciar"}</Text>
+        )}
       </Pressable>
-	<Pressable style = {styles.forgotPasswordButton} onPress={handleForgotPass}>
-		<Text style={styles.forgotPasswordText}>Olvide mi contrasena</Text>
-	</Pressable>
-	{forgotPasswordResponse ? (
-		<Text style={styles.forgotPasswordResponse}>{forgotPasswordResponse}</Text>
-	): null}	
+      <Pressable
+        style={styles.forgotPasswordButton}
+        onPress={handleForgotPass}
+        disabled={loading}
+      >
+        <Text style={styles.forgotPasswordText}>Olvide mi contrasena</Text>
+      </Pressable>
+      {forgotPasswordResponse ? (
+        <Text style={styles.forgotPasswordResponse}>
+          {forgotPasswordResponse}
+        </Text>
+      ) : null}
     </View>
   );
 };

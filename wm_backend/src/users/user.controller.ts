@@ -1,4 +1,4 @@
-import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException, ConflictException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
@@ -16,16 +16,14 @@ export class UserController {
     const existingUserByEmail = await this.userService.findByEmail(email);
 
     if (existingUser || existingUserByEmail) {
-      throw new BadRequestException(
+      throw new ConflictException(
         'El nombre de usuario o correo electrónico ya están en uso.',
       );
     }
 
-    // Genera un valor de sal
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
 
-    // Hashea la contraseña utilizando el valor de sal
     const hashedPassword = bcrypt.hashSync(password, salt);
 
     const token = this.generateUniqueToken(email);
@@ -55,13 +53,13 @@ export class UserController {
 
     const user = await this.userService.findByEmail(email);
     if (!user) {
-      throw new BadRequestException(
-        'El correo electrónico no está registrado.',
+      throw new ConflictException(
+        'El correo o la contrasena son incorrectos.',
       );
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      throw new BadRequestException('La contraseña es incorrecta.');
+      throw new ConflictException('El correo o la contrasena son incorrectos.');
     }
 
     const token = this.generateUniqueToken(email);
