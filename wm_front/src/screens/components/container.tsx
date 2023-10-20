@@ -8,6 +8,9 @@ const container = StyleSheet.create({
         alignItems: 'center',
         backgroundColor:'#201A30',
     },
+
+
 });
+
 
 export default container;

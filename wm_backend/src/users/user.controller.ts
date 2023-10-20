@@ -48,14 +48,12 @@ export class UserController {
   @Post('login')
   async login(
     @Body() loginData: { email: string; password: string },
-  ): Promise<{ token: string }> {
+  ): Promise<{ user}> {
     const { email, password } = loginData;
 
     const user = await this.userService.findByEmail(email);
     if (!user) {
-      throw new ConflictException(
-        'El correo o la contrasena son incorrectos.',
-      );
+      throw new ConflictException('El correo o la contrasena son incorrectos.');
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
@@ -64,6 +62,6 @@ export class UserController {
 
     const token = this.generateUniqueToken(email);
 
-    return { token };
+    return { user };
   }
 }
