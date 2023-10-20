@@ -9,10 +9,6 @@ import TeamPageScreen from "../src/screens/TeamPageScreen";
 import EditUserScreen from "../src/screens/EditUserScreen";
 import RecoverPass from "../src/screens/Recover/RecoverPass";
 import RecoverPassToken from "../src/screens/Recover/RecoverPassToken";
-<<<<<<< HEAD
-
-=======
->>>>>>> 1b4e9eff20556612802ce5a0e802a58d188a85fd
 const Stack = createStackNavigator();
 
 const StackNavigator: React.FC = () => {

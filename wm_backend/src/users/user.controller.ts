@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Put,
+  Get,
   Body,
   BadRequestException,
   ConflictException,
@@ -13,8 +14,6 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
-import { UpdateUserDto } from './update-user-dto';
-
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -148,7 +147,14 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
       const user = await this.userService.findById(userId);
       console.log(user)
      
-    
+  }
+  @Get('all')
+  async getAllUsers() {
+    return this.userService.findAllUsers();
+  }
+  @Get(':userId/equipos')
+  async getUserTeams(@Param('userId') userId: string){
+    return this.userService.findUserTeams(userId);
   }
 }
  

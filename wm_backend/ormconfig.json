@@ -6,14 +6,5 @@
   "database": "user_db",
   "synchronize": true,
   "entities": ["dist/**/*.entity{.ts,.js}"],
-  "postgres": {
-    "type": "postgres",
-    "host": "localhost",
-    "port": 5432,
-    "username": "postgres",
-    "password": "1",
-    "database": "mydb",
-    "entities": ["dist/**/*.entity{.ts,.js}"],
-    "synchronize": true
-  }
+  "migrations": ["dist/migrations/*{.ts,.js}"]
 }
