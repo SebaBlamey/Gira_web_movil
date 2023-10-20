@@ -15,6 +15,12 @@ export class User extends Document {
   @Prop()
   creationDate: Date;
 
+  @Prop({nulleable:true})
+  recoveryCode: string;
+
+  @Prop({ nullable: true })
+  recoveryCodeExpiration: Date;
+
   @Prop()
   token: string;
 }

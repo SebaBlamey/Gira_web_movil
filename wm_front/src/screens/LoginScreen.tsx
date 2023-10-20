@@ -37,19 +37,10 @@ const LoginScreen: React.FC = () => {
   };
   const handleForgotPass = async () => {
     try {
-      const response = await fetch("http://10.0.2.2:3000/auth/getPassword", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: username,
-        }),
-      });
-      if (response.ok) {
-        Alert.alert(response.toString());
-      }
-    } catch (error) {
+      navigation.navigate("RecoverPass");
+      console.log("Forgot pass");
+    }
+    catch (error) {
       console.error("Error");
     }
   };
@@ -78,6 +69,7 @@ const LoginScreen: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         setTimeout(() => {
           navigation.navigate("UserScreen", { userData: data });
         }, 2000);
@@ -142,7 +134,7 @@ const LoginScreen: React.FC = () => {
       <Pressable
         style={styles.forgotPasswordButton}
         onPress={handleForgotPass}
-        disabled={loading}
+        disabled={!loading}
       >
         <Text style={styles.forgotPasswordText}>Olvide mi contrasena</Text>
       </Pressable>

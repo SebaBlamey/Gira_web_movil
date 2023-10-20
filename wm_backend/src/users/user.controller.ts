@@ -1,4 +1,12 @@
-import { Controller, Post, Body, BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  BadRequestException,
+  ConflictException,
+  Param,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
@@ -48,7 +56,11 @@ export class UserController {
   @Post('login')
   async login(
     @Body() loginData: { email: string; password: string },
+<<<<<<< HEAD
   ): Promise<{ user}> {
+=======
+  ): Promise<{ user }> {
+>>>>>>> dbc9111889dea150e71b9401904cd7969f890a51
     const { email, password } = loginData;
 
     const user = await this.userService.findByEmail(email);
@@ -63,5 +75,71 @@ export class UserController {
     const token = this.generateUniqueToken(email);
 
     return { user };
+<<<<<<< HEAD
+=======
+  }
+
+  @Post('recoverPass')
+async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
+  const { email } = recoverData;
+
+  const user = await this.userService.findByEmail(email);
+  if (!user) {
+    throw new ConflictException('El correo no existe.');
+  }
+
+  const recoveryCode = this.generateRecoveryCode(6);
+  const expirationTime = new Date();
+  expirationTime.setMinutes(expirationTime.getMinutes() + 5);
+
+  user.recoveryCode = recoveryCode;
+  user.recoveryCodeExpiration = expirationTime;
+  await user.save();
+
+  await this.userService.sendEmail(
+    user.email,
+    'Recuperacion',
+    `Su código de recuperación es: ${recoveryCode}\nExpira en 5 minutos.`,
+  );
+  return { user };
+}
+
+
+  private generateRecoveryCode(length): string {
+    const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      code += characters.charAt(randomIndex);
+    }
+
+    return code;
+  }
+
+  @Post('changePass/:userId')
+  async changePass(
+    @Param('userId') userId: string,
+    @Body() changePassData: { currentPassword: string; newPassword: string },
+  ): Promise<{ message: string }> {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
+    console.log(user);
+    console.log(`currentPassword: ${changePassData.currentPassword}\nnewPassword: ${changePassData.newPassword}`)
+    const {newPassword } = changePassData;
+
+
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashedPassword = bcrypt.hashSync(newPassword, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return { message: `Contraseña actualizada con éxito,\n${user.password}` };
+>>>>>>> dbc9111889dea150e71b9401904cd7969f890a51
   }
 }
