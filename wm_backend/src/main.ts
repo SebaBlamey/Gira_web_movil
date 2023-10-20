@@ -5,10 +5,8 @@ import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-<<<<<<< HEAD
   //const postgresConnection = getConnection("postgres");
-=======
->>>>>>> 594e8b82421673a3f8f6a297a19d8478b4aebb30
+
   app.use(bodyParser.json())
   /*app.enableCors({
     origin: '*',

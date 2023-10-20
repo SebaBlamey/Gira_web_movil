@@ -23,14 +23,9 @@ const UserScreen: React.FC = () => {
   };
 
   return (
-<<<<<<< HEAD
+
     <View style={styles.container}>
       <Pressable onPress={navigateToEditUser} style={styles.button}>
-=======
-    
-    <View style={container.style}>
-      <Pressable onPress={navigateToEditUser} style={button.style}>
->>>>>>> 594e8b82421673a3f8f6a297a19d8478b4aebb30
         <Text >Editar informacion del usuario</Text>
       </Pressable>
 

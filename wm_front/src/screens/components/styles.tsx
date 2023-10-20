@@ -68,12 +68,16 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     label2: {
-        fontSize: 16,
+        fontSize: 24,
+        color: 'white',
         fontWeight: 'bold',
         marginBottom: 10,
       },
       input: {
-        height: 40,
+        height: 60,
+        width: 70,
+        color:'white',
+        fontSize: 30,
         borderColor: 'gray',
         borderWidth: 1,
         marginBottom: 20,
@@ -89,7 +93,22 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
       },
+      create: {
+        backgroundColor: "#007BFF", // Color de fondo
+    color: "white", // Color del texto
+    padding: 10, // Relleno interno
+    borderRadius: 5, // Bordes redondeados
+    textAlign: "center", // Alineación del texto
+    fontSize: 18, // Tamaño del texto
+    },
 
+    infoteam: {
+      fontSize: 20, // Tamaño del texto
+      fontWeight: "bold", // Texto en negrita
+      marginVertical: 10, // Margen vertical
+      textAlign: 'center',
+      
+    },
 
 
 

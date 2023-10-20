@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import styles from "./components/styles";
-import { useRoute } from "@react-navigation/native";
+import { useRoute,useNavigation } from "@react-navigation/native";
 import container from "./components/container";
 import header from "./components/header";
 
@@ -36,17 +36,20 @@ const TeamPage: React.FC = () => {
 
   return (
     <View style={container.style}>
-      <Text style={header.style}>Hola mundo!</Text>
       {loading ? (
         <ActivityIndicator size="large" />
       ) : (
         <View>
-          <Text style={{...header.subheader, color:'white'}}>Equipos:</Text>
+          <Text style={styles.infoteam}>Equipos:</Text>
+          <Text style={styles.create}>Crear Equipo!</Text>
           {teams.map((team) => (
             <View key={team._id}>
               <Text style={{...styles.label, color:'white'}}>{teamstr}</Text>
+              
             </View>
           ))}
+
+          
         </View>
       )}
     </View>

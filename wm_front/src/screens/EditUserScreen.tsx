@@ -14,6 +14,7 @@ import container from "./components/container";
 import header from "./components/header";
 import { smallButton } from "./components/button";
 import normalInput from "./components/input";
+import {Image} from 'react-native'
 
 const EditUserScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -45,6 +46,7 @@ const EditUserScreen: React.FC = () => {
       console.log(userData.user._id);
       if (response.ok) {
         console.log("Sí se pudo");
+        
       } else {
         console.log("No se pudo");
         console.log(response.status);
@@ -52,11 +54,16 @@ const EditUserScreen: React.FC = () => {
     } catch (error) {
       console.error("Error");
     }
+    
     navigation.navigate("UserScreen", { userData });
   };
 
   return (
     <View style={styles.container}>
+        <Image
+          source={require('../../assets/persona.png')} 
+          style={styles.image}
+        />
       <Text style={styles.label2}>Nuevo Nombre de Usuario:</Text>
       <TextInput
         style={styles.input}
