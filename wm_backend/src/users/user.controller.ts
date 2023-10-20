@@ -1,16 +1,19 @@
 import {
   Controller,
   Post,
+  Put,
   Body,
   BadRequestException,
   ConflictException,
   Param,
   UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { UpdateUserDto } from './update-user-dto';
 
 @Controller('users')
 export class UserController {
@@ -136,4 +139,16 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
 
     return { message: `Contraseña actualizada con éxito,\n${user.password}` };
   }
+
+  @Post('updateUser/:userId')
+  async updateUser(
+    @Param('userId') userId: string,
+    @Body() changeParams: {currentUsername:string; newUsername:string; currentEmail:string; newEmail:string; currentPassword:string; newPassword:string},
+  ) {
+      const user = await this.userService.findById(userId);
+      console.log(user)
+     
+    
+  }
 }
+ 

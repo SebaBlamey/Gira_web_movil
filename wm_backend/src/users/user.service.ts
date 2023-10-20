@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './user.entity';
@@ -6,11 +6,13 @@ import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { sendEmail } from 'src/microservices/email/email.sender';
 
+
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name)
     public userModel: Model<User>,
+    
   ) {}
 
   async createUser(user: User): Promise<User> {
@@ -33,4 +35,5 @@ export class UserService {
   async sendEmail(to:string, subject:string, body:string): Promise<void> {
     return await sendEmail(to, subject, body)
   }
+  
 }

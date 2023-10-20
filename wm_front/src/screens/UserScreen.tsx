@@ -1,5 +1,5 @@
 import React from "react";
-import {Image, View, Text, StyleSheet, TouchableOpacity,Pressable } from "react-native";
+import { Image, View, Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
 import styles from "./components/styles";
 import header from "./components/header";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -19,9 +19,10 @@ const UserScreen: React.FC = () => {
 
   const navigateToEditUser = () => {
     navigation.navigate("EditUser", { userData });
-  }
+  };
 
   return (
+<<<<<<< HEAD
     
     <View style={container.style}>
       <Pressable onPress={navigateToEditUser} style={button.style}>
@@ -36,13 +37,23 @@ const UserScreen: React.FC = () => {
       <Text style={header.style}>Usuario: {userName}</Text>
       
       <Text style={header.subheader}>Correo: {email}{'\n'}</Text>
+=======
+    <View style={styles.container}>
+      <Pressable onPress={navigateToEditUser} style={styles.button}>
+        <Text>Editar informacion del usuario</Text>
+      </Pressable>
+
+      <Image source={require('wm_front/assets/persona.png')} style={styles.image} />
+      <Text style={styles.username}>Usuario: {userName}</Text>
+
+      <Text style={styles.email}>Correo: {email}{'\n'}</Text>
+>>>>>>> 1b4e9eff20556612802ce5a0e802a58d188a85fd
 
       <Pressable onPress={navigateToTeamsPage}>
         <Text style={button.style}>Información de equipos</Text>
       </Pressable>
     </View>
   );
-  
 };
 
 export default UserScreen;
