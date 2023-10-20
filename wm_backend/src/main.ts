@@ -2,11 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
-import { getConnection } from 'typeorm'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const postgresConnection = getConnection("postgres");
   app.use(bodyParser.json())
   /*app.enableCors({
     origin: '*',
