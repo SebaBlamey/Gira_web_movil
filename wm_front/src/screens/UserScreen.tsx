@@ -3,11 +3,12 @@ import {Image, View, Text, StyleSheet, TouchableOpacity,Pressable } from "react-
 import styles from "./components/styles";
 import header from "./components/header";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import button from "./components/button";
+import container from "./components/container";
 
 const UserScreen: React.FC = () => {
   const route = useRoute();
   const userData = route.params?.userData;
-<<<<<<< HEAD
   const userName = userData.user?.username || "Nombre del Usuario";
   const email = userData.user?.email || "Correo del usuario";
   const navigation = useNavigation();
@@ -22,8 +23,8 @@ const UserScreen: React.FC = () => {
 
   return (
     
-    <View style={styles.container}>
-      <Pressable onPress={navigateToEditUser} style={styles.button}>
+    <View style={container.style}>
+      <Pressable onPress={navigateToEditUser} style={button.style}>
         <Text >Editar informacion del usuario</Text>
       </Pressable>
 
@@ -32,22 +33,13 @@ const UserScreen: React.FC = () => {
         source={require('wm_front/assets/persona.png')} 
         style={styles.image}
       />
-      <Text style={styles.username}>Usuario: {userName}</Text>
+      <Text style={header.style}>Usuario: {userName}</Text>
       
-      <Text style={styles.email}>Correo: {email}{'\n'}</Text>
+      <Text style={header.subheader}>Correo: {email}{'\n'}</Text>
 
       <Pressable onPress={navigateToTeamsPage}>
-        <Text style={styles.team}>Información de equipos</Text>
+        <Text style={button.style}>Información de equipos</Text>
       </Pressable>
-=======
-  const userName = userData.user.username || "Nombre del Usuario";
-  const pass = userData.user?.password || "Contraseña";
-
-  return (
-    <View style={container.style}>
-        <Text style={header.style}>{userName}</Text>
-        <Text style={header.style}>{pass}</Text>
->>>>>>> dbc9111889dea150e71b9401904cd7969f890a51
     </View>
   );
 };

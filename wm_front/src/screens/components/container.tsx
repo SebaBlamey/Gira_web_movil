@@ -7,6 +7,7 @@ const container = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor:'#201A30',
+        color: 'white',
     },
 
 

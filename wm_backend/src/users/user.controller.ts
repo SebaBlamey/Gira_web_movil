@@ -56,11 +56,8 @@ export class UserController {
   @Post('login')
   async login(
     @Body() loginData: { email: string; password: string },
-<<<<<<< HEAD
-  ): Promise<{ user}> {
-=======
   ): Promise<{ user }> {
->>>>>>> dbc9111889dea150e71b9401904cd7969f890a51
+
     const { email, password } = loginData;
 
     const user = await this.userService.findByEmail(email);
@@ -75,8 +72,6 @@ export class UserController {
     const token = this.generateUniqueToken(email);
 
     return { user };
-<<<<<<< HEAD
-=======
   }
 
   @Post('recoverPass')
@@ -140,6 +135,5 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
     await user.save();
 
     return { message: `Contraseña actualizada con éxito,\n${user.password}` };
->>>>>>> dbc9111889dea150e71b9401904cd7969f890a51
   }
 }

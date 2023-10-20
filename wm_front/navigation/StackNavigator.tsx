@@ -4,14 +4,11 @@ import StartScreen from "../src/screens/StartSreen";
 import LoginScreen from "../src/screens/LoginScreen";
 import RegisterScreen from "../src/screens/RegisterScreen";
 import UserScreen from "../src/screens/UserScreen";
-<<<<<<< HEAD
 import TeamPage from "../src/screens/TeamPageScreen";
 import TeamPageScreen from "../src/screens/TeamPageScreen";
 import EditUserScreen from "../src/screens/EditUserScreen";
-=======
 import RecoverPass from "../src/screens/Recover/RecoverPass";
 import RecoverPassToken from "../src/screens/Recover/RecoverPassToken";
->>>>>>> dbc9111889dea150e71b9401904cd7969f890a51
 
 const Stack = createStackNavigator();
 
@@ -47,22 +44,24 @@ const StackNavigator: React.FC = () => {
         name="UserScreen"
         component={UserScreen}
         options={{
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Stack.Screen
-<<<<<<< HEAD
         name="TeamPage"
         component={TeamPageScreen}
         options = {{
           headerShown: true,
         }}
       />
-
       <Stack.Screen
         name="EditUser"
         component={EditUserScreen}
-=======
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
         name="RecoverPass"
         component={RecoverPass}
         options={{
@@ -72,7 +71,6 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen
         name="RecoverPassToken"
         component={RecoverPassToken}
->>>>>>> dbc9111889dea150e71b9401904cd7969f890a51
         options={{
           headerShown: true,
         }}
