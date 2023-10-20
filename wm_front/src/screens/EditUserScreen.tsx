@@ -24,23 +24,25 @@ const EditUserScreen: React.FC = () => {
   const [newPassword, setNewPassword] = useState(userData.user?.pass);
 
   const saveChanges = async () => {
+
     const requestData = {
-      newUsername: userData.user.username,
-      newEmail: userData.user.email,
-      newPassword: userData.user.password,
+      
+      newUsername,
     };
 
     try {
       const response = await fetch(
-        `http://10.0.2.2:3000/users/updateUser/${userData.user._id}`,
+        
+        `http://10.0.2.2:3000/users/${userData.user._id}`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ requestData }),
         }
       );
+      console.log(userData.user._id);
       if (response.ok) {
         console.log("Sí se pudo");
       } else {
@@ -55,28 +57,12 @@ const EditUserScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Nuevo Nombre de Usuario:</Text>
+      <Text style={styles.label2}>Nuevo Nombre de Usuario:</Text>
       <TextInput
         style={styles.input}
         value={newUsername}
         onChangeText={(text) => setNewUsername(text)}
       />
-
-      <Text style={styles.label}>Nuevo Correo Electrónico:</Text>
-      <TextInput
-        style={styles.input}
-        value={newEmail}
-        onChangeText={(text) => setNewEmail(text)}
-      />
-
-      <Text style={styles.label}>Nueva Contraseña:</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={newPassword}
-        onChangeText={(text) => setNewPassword(text)}
-      />
-
       <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
         <Text style={styles.buttonText}>Guardar Cambios</Text>
       </TouchableOpacity>

@@ -32,6 +32,7 @@ const StackNavigator: React.FC = () => {
           headerShown: true,
         }}
       />
+      
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
@@ -43,7 +44,7 @@ const StackNavigator: React.FC = () => {
         name="UserScreen"
         component={UserScreen}
         options={{
-          headerShown: false,
+          headerShown: true,
         }}
       />
       <Stack.Screen

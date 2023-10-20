@@ -6,7 +6,7 @@ import { getConnection } from 'typeorm'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const postgresConnection = getConnection("postgres");
+  //const postgresConnection = getConnection("postgres");
   app.use(bodyParser.json())
   /*app.enableCors({
     origin: '*',

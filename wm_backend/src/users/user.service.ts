@@ -25,7 +25,12 @@ export class UserService {
   }
 
   async findById(userId: string): Promise<User | null> {
-    return await this.userModel.findById(userId).exec();
+    return await this.userModel.findById({userId}).exec();
+  }
+   async findById2(userId: string): Promise<User | null> {
+    const { ObjectId } = require('mongodb');
+    const id = new ObjectId(userId);
+    return await this.userModel.findById({_id: id}).exec();
   }
 
   async findByUsername(username: string): Promise<User | undefined> {

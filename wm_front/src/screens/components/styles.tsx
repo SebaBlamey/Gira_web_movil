@@ -67,22 +67,28 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 18,
     },
-    input: {
-        height: 40,
-        borderColor: "gray",
-        borderWidth: 1,
+    label2: {
+        fontSize: 16,
+        fontWeight: 'bold',
         marginBottom: 10,
-        padding: 8,
-    },
-    saveButton: {
-        backgroundColor: "#007BFF",
-        padding: 12,
-        alignItems: "center",
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 18,
-    },
+      },
+      input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 20,
+        paddingHorizontal: 10,
+      },
+      saveButton: {
+        backgroundColor: '#eb94d0',
+        padding: 10,
+        borderRadius: 5,
+      },
+      buttonText: {
+        color: 'black',
+        textAlign: 'center',
+        fontWeight: 'bold',
+      },
 
 
 

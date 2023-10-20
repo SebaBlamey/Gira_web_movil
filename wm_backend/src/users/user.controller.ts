@@ -1,7 +1,7 @@
 import {
   Controller,
   Post,
-  Put,
+  Patch,
   Body,
   BadRequestException,
   ConflictException,
@@ -13,7 +13,7 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
-import { UpdateUserDto } from './update-user-dto';
+
 
 @Controller('users')
 export class UserController {
@@ -59,14 +59,8 @@ export class UserController {
   @Post('login')
   async login(
     @Body() loginData: { email: string; password: string },
-<<<<<<< HEAD
+
   ): Promise<{ user }> {
-=======
-
-  ): Promise<{ user}> {
-
- 
->>>>>>> 0dbcced167bf6105300fd41850abd2fcf4b98e58
 
     const { email, password } = loginData;
 
@@ -82,10 +76,6 @@ export class UserController {
     const token = this.generateUniqueToken(email);
 
     return { user };
-<<<<<<< HEAD
-=======
-
->>>>>>> 0dbcced167bf6105300fd41850abd2fcf4b98e58
   }
 
   @Post('recoverPass')
@@ -149,21 +139,24 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
     await user.save();
 
     return { message: `Contraseña actualizada con éxito,\n${user.password}` };
-<<<<<<< HEAD
-=======
-
->>>>>>> 0dbcced167bf6105300fd41850abd2fcf4b98e58
   }
 
-  @Post('updateUser/:userId')
+  @Patch(':id')
   async updateUser(
-    @Param('userId') userId: string,
-    @Body() changeParams: {currentUsername:string; newUsername:string; currentEmail:string; newEmail:string; currentPassword:string; newPassword:string},
+    @Param('id') id: string,
+    @Body() changeParams: { newUsername:string},
   ) {
-      const user = await this.userService.findById(userId);
-      console.log(user)
+    console.log(changeParams);
+    const user = await this.userService.findById2(id);
+    
+    user.username = changeParams.newUsername;
+    await user.save();
+    console.log(user)
+      
      
     
   }
+
+//usar get profile
 }
  
