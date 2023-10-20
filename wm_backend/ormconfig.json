@@ -1,8 +1,19 @@
 {
+  "name": "default",
   "type": "mongodb",
   "host": "localhost",
   "port": 27017,
   "database": "user_db",
   "synchronize": true,
-  "entities": ["dist/**/*.entity{.ts,.js}"]
+  "entities": ["dist/**/*.entity{.ts,.js}"],
+  "postgres": {
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "mysecretpassword",
+    "database": "mydb",
+    "entities": ["dist/**/*.entity{.ts,.js}"],
+    "synchronize": true
+  }
 }

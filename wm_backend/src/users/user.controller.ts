@@ -59,10 +59,14 @@ export class UserController {
   @Post('login')
   async login(
     @Body() loginData: { email: string; password: string },
+<<<<<<< HEAD
+  ): Promise<{ user }> {
+=======
 
   ): Promise<{ user}> {
 
  
+>>>>>>> 0dbcced167bf6105300fd41850abd2fcf4b98e58
 
     const { email, password } = loginData;
 
@@ -78,7 +82,10 @@ export class UserController {
     const token = this.generateUniqueToken(email);
 
     return { user };
+<<<<<<< HEAD
+=======
 
+>>>>>>> 0dbcced167bf6105300fd41850abd2fcf4b98e58
   }
 
   @Post('recoverPass')
@@ -142,7 +149,10 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
     await user.save();
 
     return { message: `Contraseña actualizada con éxito,\n${user.password}` };
+<<<<<<< HEAD
+=======
 
+>>>>>>> 0dbcced167bf6105300fd41850abd2fcf4b98e58
   }
 
   @Post('updateUser/:userId')
