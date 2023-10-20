@@ -16,6 +16,7 @@ const UserScreen: React.FC = () => {
   };
 
   const navigateToEditUser = () => {
+    
     navigation.navigate("EditUser", { userData });
   }
 

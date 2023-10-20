@@ -13,14 +13,37 @@ const EditUserScreen: React.FC = () => {
     const [newUsername, setNewUsername] = useState(userData.user?.username);
     const [newEmail, setNewEmail] = useState(userData.user?.email);
     const [newPassword, setNewPassword] = useState(userData.user?.pass);
+    
+    const saveChanges = async () => {
 
-    const saveChanges = () => {
-      
-        userData.user.username = newUsername;
-        userData.user.email = newEmail;
-        userData.user.pass = newPassword;
-      
-        navigation.navigate("UserScreen", { userData });
+      const requestData = {
+        newUsername: userData.user.username,
+        newEmail: userData.user.email,
+        newPassword: userData.user.password,
+      };
+        
+        try {
+          const response = await fetch(`http://10.0.2.2:3000/users/updateUser/${userData.user._id}`, {
+            
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            
+            body: JSON.stringify({requestData}),
+            
+          });
+          if(response.ok){
+            console.log('Si se pudoo');
+          }
+          else{
+            console.log('no se pudoo');
+            console.log(response.status)
+          }
+        } catch (error) {
+          console.error("Error");
+        }
+        navigation.navigate("UserScreen", { userData});
     };
   
     return (
@@ -52,6 +75,6 @@ const EditUserScreen: React.FC = () => {
         </TouchableOpacity>
       </View>
     );
-  };
+};
 
 export default EditUserScreen;
