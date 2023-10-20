@@ -15,7 +15,7 @@ const UserScreen: React.FC = () => {
   const navigation = useNavigation();
 
   const navigateToTeamsPage = () => {
-    navigation.navigate("TeamPage");
+    navigation.navigate("TeamPage", {userData});
   };
 
   const navigateToEditUser = () => {
@@ -23,15 +23,25 @@ const UserScreen: React.FC = () => {
   };
 
   return (
+<<<<<<< HEAD
     <View style={styles.container}>
       <Pressable onPress={navigateToEditUser} style={styles.button}>
+=======
+    
+    <View style={container.style}>
+      <Pressable onPress={navigateToEditUser} style={button.style}>
+>>>>>>> 594e8b82421673a3f8f6a297a19d8478b4aebb30
         <Text >Editar informacion del usuario</Text>
       </Pressable>
 
-      <Image source={require('wm_front/assets/persona.png')} style={styles.image} />
-      <Text style={styles.username}>Usuario: {userName}</Text>
 
-      <Text style={styles.email}>Correo: {email}{'\n'}</Text>
+      <Image
+        source={require('../../assets/persona.png')} 
+        style={styles.image}
+      />
+      <Text style={header.style}>Usuario: {userName}</Text>
+      
+      <Text style={header.subheader}>Correo: {email}{'\n'}</Text>
 
       <Pressable onPress={navigateToTeamsPage}>
         <Text style={styles.team}>Información de equipos</Text>

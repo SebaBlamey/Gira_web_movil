@@ -1,7 +1,12 @@
 import {
   Controller,
   Post,
+<<<<<<< HEAD
   Patch,
+=======
+  Put,
+  Get,
+>>>>>>> 594e8b82421673a3f8f6a297a19d8478b4aebb30
   Body,
   BadRequestException,
   ConflictException,
@@ -13,8 +18,11 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 594e8b82421673a3f8f6a297a19d8478b4aebb30
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -59,7 +67,10 @@ export class UserController {
   @Post('login')
   async login(
     @Body() loginData: { email: string; password: string },
+<<<<<<< HEAD
 
+=======
+>>>>>>> 594e8b82421673a3f8f6a297a19d8478b4aebb30
   ): Promise<{ user }> {
 
     const { email, password } = loginData;
@@ -154,7 +165,14 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
     console.log(user)
       
      
-    
+  }
+  @Get('all')
+  async getAllUsers() {
+    return this.userService.findAllUsers();
+  }
+  @Get(':userId/equipos')
+  async getUserTeams(@Param('userId') userId: string){
+    return this.userService.findUserTeams(userId);
   }
 
 //usar get profile
