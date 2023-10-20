@@ -4,6 +4,8 @@ import StartScreen from "../src/screens/StartSreen";
 import LoginScreen from "../src/screens/LoginScreen";
 import RegisterScreen from "../src/screens/RegisterScreen";
 import UserScreen from "../src/screens/UserScreen";
+import RecoverPass from "../src/screens/Recover/RecoverPass";
+import RecoverPassToken from "../src/screens/Recover/RecoverPassToken";
 
 const Stack = createStackNavigator();
 
@@ -19,6 +21,7 @@ const StackNavigator: React.FC = () => {
         headerTintColor: "#fff",
       }}
     >
+      {/*<Stack.Screen name="RecoverPass" component={RecoverPass} />*/}
       <Stack.Screen name="Start" component={StartScreen} />
       <Stack.Screen
         name="Login"
@@ -37,6 +40,20 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen
         name="UserScreen"
         component={UserScreen}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="RecoverPass"
+        component={RecoverPass}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="RecoverPassToken"
+        component={RecoverPassToken}
         options={{
           headerShown: true,
         }}

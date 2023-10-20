@@ -7,11 +7,13 @@ import { useRoute } from "@react-navigation/native";
 const UserScreen: React.FC = () => {
   const route = useRoute();
   const userData = route.params?.userData;
-  const userName = userData?.username || "Nombre del Usuario";
+  const userName = userData.user.username || "Nombre del Usuario";
+  const pass = userData.user?.password || "Contraseña";
 
   return (
     <View style={container.style}>
         <Text style={header.style}>{userName}</Text>
+        <Text style={header.style}>{pass}</Text>
     </View>
   );
 };
