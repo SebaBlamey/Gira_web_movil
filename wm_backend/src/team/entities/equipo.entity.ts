@@ -3,16 +3,20 @@ import { Document, Types } from 'mongoose';
 import { Trabajo } from './trabajo.entity';
 import { User } from 'src/users/user.entity';
 
+
 @Schema({ collection: 'equipos' })
 export class Equipo {
   @Prop()
   nombre: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Trabajo' })
-  trabajo: Trabajo;
+  @Prop({ type: Types.ObjectId, ref: 'Trabajo', default: null })
+  trabajo?: Trabajo;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
-  integrantes: User[];
+  @Prop()
+  integrantes?: {
+    user: string,
+    role: string, 
+  }[];
 }
 
 export const EquipoSchema = SchemaFactory.createForClass(Equipo);

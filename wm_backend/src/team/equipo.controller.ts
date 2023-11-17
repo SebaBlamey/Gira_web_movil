@@ -6,7 +6,7 @@ import { CreateEquipoDto } from './dto/equipo.dto';
 export class EquipoController {
   constructor(private readonly equipoService: EquipoService) {}
 
-  @Get()
+  @Get('/findAll')
   async findAll() {
     return await this.equipoService.findAll();
   }
@@ -15,6 +15,22 @@ export class EquipoController {
   create(@Body() createEquipoDto: CreateEquipoDto) {
     return this.equipoService.create(createEquipoDto);
   }
+  
+  @Post('/join')
+  Join(@Body() _idTeam: string, _idUser: string, _role: string) {
+    return this.equipoService.join(_idTeam, _idUser,_role);
+  }
+
+  @Get('/findById')
+  findById(@Body() _id: string) {
+    return this.equipoService.findById(_id);
+  }
+
+  @Get('/findByName')
+  findByName(@Body() nombre: string) {
+    return this.equipoService.findByName(nombre);
+  }
+
   @Post('/delete')
   delete(@Body() _id: string) {
     return this.equipoService.delete(_id);

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
+/*import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
 export class AddIntegranteDto {
   @IsNotEmpty()
@@ -19,3 +19,4 @@ export class RemoveIntegranteDto {
   @IsNumber()
   userId: number;
 }
+*/

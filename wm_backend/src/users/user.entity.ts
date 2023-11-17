@@ -24,8 +24,13 @@ export class User extends Document {
   @Prop()
   token: string;
 
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Equipo' }] })
-  equipos: Types.Array<MongooseSchema.Types.ObjectId>;
+  @Prop([
+    {
+      equipoId: { type: MongooseSchema.Types.ObjectId, ref: 'Equipo' },
+      role: { type: String, default: 'Miembro' },
+    },
+  ])
+  equipos: { equipoId: Types.ObjectId, role: string }[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

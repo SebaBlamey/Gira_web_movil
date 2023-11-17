@@ -1,4 +1,14 @@
-import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class IntegranteDto{
+  @IsNotEmpty()
+  @IsString()
+  userId: string;
+
+  @IsString()
+  role?: string;
+}
 
 export class CreateEquipoDto {
   @IsNotEmpty()
@@ -7,7 +17,12 @@ export class CreateEquipoDto {
 
   @IsNotEmpty()
   @IsNumber()
-  trabajoId: number;
+  trabajoId: string;
+
+  @IsArray()
+  @ValidateNested({each: true})
+  @Type(() => IntegranteDto)
+  integrantes?: IntegranteDto[];
 }
 
 export class UpdateEquipoDto {

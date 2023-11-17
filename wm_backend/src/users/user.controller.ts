@@ -15,6 +15,7 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { get } from 'http';
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -161,6 +162,11 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
   @Get(':userId/equipos')
   async getUserTeams(@Param('userId') userId: string){
     return this.userService.findUserTeams(userId);
+  }
+  @Get('findById')
+  async getUser(@Body() _id: string){
+    //return this.userService.findById2(_id);
+    return this.userService.findByUsername(_id);
   }
 
 //usar get profile

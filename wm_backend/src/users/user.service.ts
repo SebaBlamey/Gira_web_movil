@@ -30,9 +30,8 @@ export class UserService {
    async findById2(userId: string): Promise<User | null> {
     const { ObjectId } = require('mongodb');
     const id = new ObjectId(userId);
-    return await this.userModel.findById({_id: id}).exec();
+    return await this.userModel.findById(id).exec();
   }
-
   async findAllUsers(): Promise<User[]> {
     return this.userModel.find().exec();
   }
