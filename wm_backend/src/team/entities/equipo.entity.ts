@@ -4,7 +4,7 @@ import { Trabajo } from '../../proyect/entities/trabajo.entity';
 
 
 @Schema({ collection: 'equipos' })
-export class Equipo {
+export class Equipo extends Document {
   @Prop()
   nombre: string;
 

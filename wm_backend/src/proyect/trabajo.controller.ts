@@ -15,6 +15,12 @@ export class TrabajoController {
     return this.trabajoService.findById(_id);
   }
 
+  @Post('/join')
+  join(@Body() {_idTrabajo, _idEquipo}:{_idTrabajo: string, _idEquipo: string}) {
+    return this.trabajoService.join(_idTrabajo, _idEquipo);
+  }
+
+
   @Get('/findByName')
   findByName(@Body() nombre: string) {
     return this.trabajoService.findByName(nombre);

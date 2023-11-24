@@ -5,12 +5,15 @@ import { Equipo, EquipoDocument } from './entities/equipo.entity';
 import { CreateEquipoDto } from './dto/equipo.dto';
 import { UserService } from 'src/users/user.service';
 import { Types } from 'mongoose';
+import { Trabajo, TrabajoDocument } from 'src/proyect/entities/trabajo.entity';
 
 @Injectable()
 export class EquipoService {
   constructor(
     @InjectModel(Equipo.name) private equipoModel: Model<EquipoDocument>,
     private userService: UserService,
+    @InjectModel(Trabajo.name)
+    private trabajoModel: Model<TrabajoDocument>,
   ) {}
 
   async findAll(): Promise<Equipo[]> {
@@ -107,6 +110,40 @@ export class EquipoService {
 
     console.log(equipo);
     return equipo.save();
+  }
+
+  async findEquipoFromTrabajo(trabajoId: string): Promise<Equipo[]> {
+  console.log(`Buscando trabajo con ID: ${trabajoId}`);
+  const trabajo = await this.trabajoModel.findById(trabajoId);
+  
+  if (!trabajo) {
+    console.log('Trabajo no encontrado');
+    throw new NotFoundException('Trabajo no encontrado');
+  }
+
+  console.log(`Trabajo encontrado: ${trabajo.nombre}`);
+
+  try {
+    const equipo = await this.equipoModel.findOne({ trabajo: trabajoId });
+    console.log('Equipo en el trabajo:', equipo);
+    return equipo ? [equipo] : [];
+  } catch (error) {
+    console.error('Error al buscar equipos:', error);
+    throw error;
+  }
+}
+
+  
+  
+
+  async deleteTrabajoFromEquipo(_id: string): Promise<Equipo> {
+    const equipo = await this.findById(_id);
+    if (!equipo) {
+      console.log('Equipo no encontrado');
+      throw new NotFoundException('Equipo no encontrado');
+    }
+    equipo.trabajo = null;
+    return await equipo.save();
   }
 
   async delete(_id: string): Promise<boolean> {

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { Equipo } from '../../team/entities/equipo.entity';
+import { Equipo, EquipoDocument } from '../../team/entities/equipo.entity';
 
 @Schema({ collection: 'trabajos' })
 export class Trabajo extends Document {
@@ -8,8 +8,7 @@ export class Trabajo extends Document {
   nombre: string;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Equipo' }] }) 
-  equipos: Equipo[];
-
+  equipos: Types.Array<Record<string, unknown> | EquipoDocument>;
 }
 
 export const TrabajoSchema = SchemaFactory.createForClass(Trabajo);
