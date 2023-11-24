@@ -21,11 +21,12 @@ export class UserService {
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
+    console.log(`Buscando usuario con email: ${email}`)
     const user = await this.userModel.findOne({ email: email }).exec();
     return user;
   }
 
-  async findById(userId: string): Promise<User | null> {
+  async findByIdd(userId: string): Promise<User | null> {
     return await this.userModel.findById(userId).exec();
   }
    async findById2(userId: string): Promise<User | null> {

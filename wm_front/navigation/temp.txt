@@ -1,0 +1,21 @@
+<Stack.Screen
+        name="EditUser"
+        component={EditUserScreen}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="RecoverPass"
+        component={RecoverPass}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="CreateTeam"
+        component={CreateTeam}
+        options={{
+          headerShown: true,
+        }}
+      />

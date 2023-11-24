@@ -34,7 +34,7 @@ const UserScreen: React.FC = () => {
     navigation.navigate("EditUser", { userData });
   };
   const navigateToProyectos = () => {
-    navigation.navigate("Proyectos", { userData });
+    navigation.navigate("ProyectPage", { userData });
   };
 
   const date = new Date();

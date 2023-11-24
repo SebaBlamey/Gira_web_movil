@@ -4,13 +4,16 @@ import StartScreen from "../src/screens/StartSreen";
 import LoginScreen from "../src/screens/LoginScreen";
 import RegisterScreen from "../src/screens/RegisterScreen";
 import UserScreen from "../src/screens/UserScreen";
-import TeamPage from "../src/screens/TeamPageScreen";
-import TeamPageScreen from "../src/screens/TeamPageScreen";
+import TeamPage from "../src/screens/UserScreens/TeamPageScreen";
+import TeamPageScreen from "../src/screens/UserScreens/TeamPageScreen";
 import EditUserScreen from "../src/screens/EditUserScreen";
 import RecoverPass from "../src/screens/Recover/RecoverPass";
 import RecoverPassToken from "../src/screens/Recover/RecoverPassToken";
-import MainProyecto from "../src/screens/UserScreens/MainProyecto";
-import CreateTeam from "../src/screens/UserScreens/CreateTeam";
+import ProyectoPage from "../src/screens/UserScreens/ProyectPageScreen";
+import CreateTeamPage from "../src/screens/UserScreens/CreateTeamPage";
+import EquipoDetalles from "../src/screens/UserScreens/EquipoDetalles";
+//import MainProyecto from "../src/screens/UserScreens/MainProyecto";
+//import CreateTeam from "../src/screens/UserScreens/CreateTeam";
 const Stack = createStackNavigator();
 
 const StackNavigator: React.FC = () => {
@@ -34,7 +37,7 @@ const StackNavigator: React.FC = () => {
           headerShown: true,
         }}
       />
-      
+
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
@@ -50,13 +53,6 @@ const StackNavigator: React.FC = () => {
         }}
       />
       <Stack.Screen
-        name="TeamPage"
-        component={TeamPageScreen}
-        options = {{
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
         name="EditUser"
         component={EditUserScreen}
         options={{
@@ -64,15 +60,30 @@ const StackNavigator: React.FC = () => {
         }}
       />
       <Stack.Screen
-        name="RecoverPass"
-        component={RecoverPass}
+        name="ProyectPage"
+        component={ProyectoPage}
         options={{
           headerShown: true,
         }}
       />
       <Stack.Screen
         name="CreateTeam"
-        component={CreateTeam}
+        component={CreateTeamPage}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="TeamPage"
+        component={TeamPageScreen}
+        options={{
+          headerShown: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="EquipoDetalles"
+        component={EquipoDetalles}
         options={{
           headerShown: true,
         }}

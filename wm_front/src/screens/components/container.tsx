@@ -40,4 +40,27 @@ export const prettyContainer = StyleSheet.create({
   });
 
 
+export const roundedContainer = StyleSheet.create({
+  container: {
+    backgroundColor: "#201A30",
+    padding: 10,
+    borderRadius: 10,
+    width: 300, 
+    alignSelf: "center",
+    marginTop: 5,
+    borderWidth: 1,
+    borderColor: "#0DF5E3"
+  },
+  title: {
+    color: "#0DF5E3",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  content: {
+    color: "white",
+    fontSize: 16,
+  },
+});
+
+
 export default container

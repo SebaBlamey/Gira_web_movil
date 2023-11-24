@@ -47,6 +47,7 @@ export class EquipoService {
         const alreadyInTeam = integrantes.some((integrante) => integrante.user.equals(user._id))
         if(alreadyInTeam){
           console.log('El usuario ya está en el equipo');
+          throw ConflictException;
           return team;
         }
       }
@@ -96,7 +97,7 @@ export class EquipoService {
       // Actualiza los roles de los usuarios en el modelo de usuario
       await Promise.all(
         integrantes.map(async ({ userId, role }) => {
-          const user = await this.userService.findById(userId);
+          const user = await this.userService.findByIdd(userId);
           if (user) {
             user.equipos.push({
               equipoId: equipo._id,
@@ -114,7 +115,7 @@ export class EquipoService {
 
   async findEquipoFromUser(userId: string): Promise<Equipo[]> {
     console.log(`Buscando usuario con ID: ${userId}`);
-    const user = await this.userService.findById(userId);
+    const user = await this.userService.findByIdd(userId);
 
     if (!user) {
         console.log('Usuario no encontrado');

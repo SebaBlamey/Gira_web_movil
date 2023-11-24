@@ -121,7 +121,7 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
     @Param('userId') userId: string,
     @Body() changePassData: { currentPassword: string; newPassword: string },
   ): Promise<{ message: string }> {
-    const user = await this.userService.findById(userId);
+    const user = await this.userService.findByIdd(userId);
 
     if (!user) {
       throw new UnauthorizedException('Usuario no encontrado');
@@ -163,9 +163,10 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
   async getUserTeams(@Param('userId') userId: string){
     return this.userService.findUserTeams(userId);
   }
-  @Get('findById')
-  async getUser(@Body() _id: string){
-    return this.userService.findById(_id);
+  @Get('findById/:id') // Utiliza :id para indicar que es un parámetro en la URL
+  async getUser(@Param('id') _id: string) {
+    console.log(`Buscando usuario con ID: ${_id}`);
+    return this.userService.findByIdd(_id);
     //console.log(`Buscando usuario con email: ${_id}`)
     //return this.userService.findByEmail(_id);
   }
