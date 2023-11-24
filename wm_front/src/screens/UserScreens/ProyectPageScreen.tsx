@@ -15,7 +15,7 @@ const ProyectoPage: React.FC = () => {
     <View
       style={{
         ...prettyContainer.container,
-        flex: 1,
+        flex: 1,  
         justifyContent: "flex-start",
       }}
     >
