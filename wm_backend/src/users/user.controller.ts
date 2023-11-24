@@ -165,8 +165,24 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
   }
   @Get('findById')
   async getUser(@Body() _id: string){
-    //return this.userService.findById2(_id);
-    return this.userService.findByUsername(_id);
+    return this.userService.findById(_id);
+    //console.log(`Buscando usuario con email: ${_id}`)
+    //return this.userService.findByEmail(_id);
+  }
+  @Get('findByEmail/:email')
+  async getUserByEmail(@Param('email') _email: string){
+    console.log(`Buscando usuario con email: ${_email}`)
+    return this.userService.findByEmail(_email);
+  }
+
+  @Post('deleteEquipoFromUser')
+  async deleteEquipoFromUser(@Body() { userId, equipoId }: { userId: string, equipoId: string }) {
+    return this.userService.deleteEquipoFromUser(userId, equipoId);
+  }
+
+  @Get('findUserByEquipoId/:equipoId')
+  async findUsersByEquipoId(@Param('equipoId') equipoId: string){
+    return this.userService.findUsersByEquipoId(equipoId);
   }
 
 //usar get profile

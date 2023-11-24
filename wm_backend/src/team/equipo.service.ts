@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Equipo, EquipoDocument } from './entities/equipo.entity';
 import { CreateEquipoDto } from './dto/equipo.dto';
 import { UserService } from 'src/users/user.service';
-import { UserController } from 'src/users/user.controller';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class EquipoService {
@@ -18,50 +18,74 @@ export class EquipoService {
   }
 
   async findById(userId: string): Promise<Equipo | null> {
-    const { ObjectId } = require('mongodb');
-    const id = new ObjectId(userId);
-    return await this.equipoModel.findById({_id: id}).exec();
+    return await this.equipoModel.findById(userId).exec();
   }
 
   async findByName(nombre: string): Promise<Equipo | null> {
     return await this.equipoModel.findOne({ nombre: nombre }).exec();
   }
 
-  async join(_idTeam: string, _idUser: string, _role: string) {
-    const team = await this.equipoModel.findById(_idTeam);
-    const user = await this.userService.findById(_idUser);
-    const role = _role || 'Miembro';
-    if (!team) {
-      throw new Error('Equipo no encontrado');
-    }
-    if (!user) {
-      throw new Error('Usuario no encontrado');
-    }
-    //team.integrantes.push(user._id);
-    /*team.integrantes.push({
-      user: user._id,
-      role: role,
-    });*/
-    return team;
-  }
+  async join(_idTeam: string, _userEmail: string, _role: string) {
+    try{
+      const team = await this.equipoModel.findById(_idTeam);
+      if(!team){
+        console.log('Equipo no encontrado');
+        throw new NotFoundException('Equipo no encontrado');
+      }
+      const user = await this.userService.findByEmail(_userEmail);
+      if(!user){
+        console.log('Usuario no encontrado');
+        throw new NotFoundException('Usuario no encontrado');
+      }
+      const integrantes = team.integrantes;
 
+      if(integrantes && integrantes.length > 0){
+        console.log('El equipo tiene integrantes');
+        const alreadyInTeam = integrantes.some((integrante) => integrante.user.equals(user._id))
+        if(alreadyInTeam){
+          console.log('El usuario ya está en el equipo');
+          return team;
+        }
+      }
+
+      if(integrantes){
+        integrantes.push({user: user._id, role: _role});
+      }
+      else{
+        team.integrantes = [{user: user._id, role: _role}];
+      }
+      await team.save();
+      user.equipos.push({equipoId: team._id, role: _role});
+      await user.save();
+      return team;
+
+    }catch(error){
+      console.log(error);
+      throw error;
+    }
+  }
   async create(createEquipoDto: CreateEquipoDto): Promise<Equipo> {
     const { nombre, trabajoId, integrantes } = createEquipoDto;
 
+    if (nombre == null) {
+      console.log('El equipo debe tener un nombre');
+      throw new ConflictException();
+    }
     const existingEquipo = await this.equipoModel.findOne({ nombre });
 
     if (existingEquipo) {
-      throw new Error('El equipo con este nombre ya existe');
+      console.log('El equipo con este nombre ya existe');
+      throw new ConflictException();
     }
 
     const equipo = new this.equipoModel({ nombre, trabajo: trabajoId });
 
     if (integrantes && integrantes.length > 0) {
-      const integrantesArray = integrantes.map(({userId, role}) => {
+      const integrantesArray = integrantes.map(({ userId, role }) => {
         return {
-          user: userId,
+          user: new Types.ObjectId(userId),
           role: role || 'Miembro',
-        }
+        };
       });
 
       equipo.integrantes = integrantesArray;
@@ -83,9 +107,31 @@ export class EquipoService {
 
     console.log(equipo);
     return equipo.save();
+  }
 
-      }
-  async delete(_id: string): Promise<Equipo> {
-    return await this.equipoModel.findOneAndDelete({ _id });
+  async delete(_id: string): Promise<boolean> {
+    const deletedTeam = await this.findById(_id);
+
+    if(!deletedTeam){
+      console.log('Equipo no encontrado');
+      throw new NotFoundException('Equipo no encontrado');
+    }
+
+    if(deletedTeam.integrantes && deletedTeam.integrantes.length > 0){
+      const users = await this.userService.findUsersByEquipoId(_id);
+      await Promise.all(
+        users.map(async (user) => {
+          this.userService.deleteEquipoFromUser(user._id, _id);
+        })
+      );
+    }
+    
+    const deleted = await this.equipoModel.deleteOne({ _id: _id }).exec();
+    if(deleted.deletedCount === 1){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }

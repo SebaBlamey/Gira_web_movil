@@ -17,8 +17,13 @@ export class EquipoController {
   }
   
   @Post('/join')
-  Join(@Body() _idTeam: string, _idUser: string, _role: string) {
-    return this.equipoService.join(_idTeam, _idUser,_role);
+  Join(@Body() { _idTeam, _userEmail, _role }: { _idTeam: string, _userEmail: string, _role: string }) {
+    console.log(`Buscando Team con ID: ${_idTeam}`)
+    /*const team = this.equipoService.findById(_idTeam);
+    if(team) {
+      console.log('Equipoencontradp');
+    }*/
+    return this.equipoService.join(_idTeam, _userEmail,_role);
   }
 
   @Get('/findById')
