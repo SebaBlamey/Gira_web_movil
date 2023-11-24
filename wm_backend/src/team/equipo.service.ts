@@ -112,6 +112,27 @@ export class EquipoService {
     return equipo.save();
   }
 
+  async findEquipoFromUser(userId: string): Promise<Equipo[]> {
+    console.log(`Buscando usuario con ID: ${userId}`);
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+        console.log('Usuario no encontrado');
+        throw new NotFoundException('Usuario no encontrado');
+    }
+
+    console.log('Usuario encontrado');
+    const equipos = await this.equipoModel.find({ 'integrantes.user': userId });
+
+    if (equipos.length === 0) {
+        console.log('No está en un equipo');
+    } else {
+        console.log('Equipos del usuario:', equipos);
+    }
+
+    return equipos;
+}
+
   async findEquipoFromTrabajo(trabajoId: string): Promise<Equipo[]> {
   console.log(`Buscando trabajo con ID: ${trabajoId}`);
   const trabajo = await this.trabajoModel.findById(trabajoId);

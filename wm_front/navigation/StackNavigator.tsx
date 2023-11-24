@@ -9,6 +9,8 @@ import TeamPageScreen from "../src/screens/TeamPageScreen";
 import EditUserScreen from "../src/screens/EditUserScreen";
 import RecoverPass from "../src/screens/Recover/RecoverPass";
 import RecoverPassToken from "../src/screens/Recover/RecoverPassToken";
+import MainProyecto from "../src/screens/UserScreens/MainProyecto";
+import CreateTeam from "../src/screens/UserScreens/CreateTeam";
 const Stack = createStackNavigator();
 
 const StackNavigator: React.FC = () => {
@@ -17,10 +19,10 @@ const StackNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false,
         headerStyle: {
-          backgroundColor: "#201A30",
-          borderBottomColor: "#201A30",
+          backgroundColor: "#0DF5E3",
+          borderBottomColor: "#0DF5E3",
         },
-        headerTintColor: "#fff",
+        headerTintColor: "#201A30",
       }}
     >
       {/*<Stack.Screen name="RecoverPass" component={RecoverPass} />*/}
@@ -69,8 +71,8 @@ const StackNavigator: React.FC = () => {
         }}
       />
       <Stack.Screen
-        name="RecoverPassToken"
-        component={RecoverPassToken}
+        name="CreateTeam"
+        component={CreateTeam}
         options={{
           headerShown: true,
         }}

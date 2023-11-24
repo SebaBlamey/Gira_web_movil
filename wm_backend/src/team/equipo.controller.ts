@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { EquipoService } from './equipo.service';
 import { CreateEquipoDto } from './dto/equipo.dto';
 
@@ -24,6 +24,11 @@ export class EquipoController {
       console.log('Equipoencontradp');
     }*/
     return this.equipoService.join(_idTeam, _userEmail,_role);
+  }
+
+  @Get(':id/findTeamsFromUserId')
+  findTeamsFromUserId(@Param('id') _id: string) {
+    return this.equipoService.findEquipoFromUser(_id);
   }
 
   @Get('/findById')

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Image, Text, ActivityIndicator, Pressable } from "react-native";
 import styles from "./components/styles";
 import { useRoute,useNavigation } from "@react-navigation/native";
-import { container } from "./components/container";
+import { container, prettyContainer } from "./components/container";
 import header from "./components/header";
+import { defaultButton, equipoButton } from "./components/button";
 
 interface Equipo {
   _id: string;
@@ -18,10 +19,20 @@ const TeamPage: React.FC = () => {
   const [teams, setTeams] = useState<Equipo[]>([]);
   const [loading, setLoading] = useState(true);
   const [teamstr, setTeamsStr] = useState<string>("");
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('La pantalla TeamPage está en primer plano. Recargando datos...');
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const userId = userData.user._id;
-    fetch(`http://10.0.2.2:3000/users/${userId}/equipos`)
+    console.log(`userID: ${userId}`)
+    fetch(`http://10.0.2.2:3000/equipo/${userId}/findTeamsFromUserId`)
       .then((response) => response.json())
       .then((data) => {
         setTeams(data);
@@ -34,25 +45,42 @@ const TeamPage: React.FC = () => {
       });
   }, []);
 
-  return (
-    <View style={container.style}>
-      {loading ? (
-        <ActivityIndicator size="large" />
-      ) : (
-        <View>
-          <Text style={styles.infoteam}>Equipos:</Text>
-          <Text style={styles.create}>Crear Equipo!</Text>
-          {teams.map((team) => (
-            <View key={team._id}>
-              <Text style={{...styles.label, color:'white'}}>{teamstr}</Text>
-              
-            </View>
-          ))}
+  const navigateToCreateTeam = () => {
+    navigation.navigate("CreateTeam", { userData });
+  }
+  const handleEquipoButtonClick = (equipo: Equipo) => {}
 
-          
-        </View>
-      )}
-    </View>
+  return (
+    <View style={{...prettyContainer.container, flex:1,justifyContent:'flex-start'}}>
+  <View style={prettyContainer.headerContainer}>
+    <Image
+      source={require('../../assets/team-logo.png')}
+      style={{...styles.image}}
+    />
+  </View>
+  <Text style={{fontSize: 20, color: '#fff', marginTop:"10%"}}>Tus equipos:</Text>
+{teams.length === 0 ? (
+  <Text style={{fontSize: 15, color: '#fff'}}>No estás en ningún equipo :(</Text>
+) : (
+  <View>
+    {teams.map((equipo) => (
+      <Pressable
+        key={equipo._id}
+        style={equipoButton.style}  
+        //onPress={() => handleEquipoButtonClick(equipo)} 
+      >
+        <Text style={equipoButton.text}>{equipo.nombre}</Text>
+      </Pressable>
+    ))}
+  </View>
+)}
+
+  <View style={{flex:1, justifyContent:'center'}}>
+    <Pressable onPress={navigateToCreateTeam} style={defaultButton.style}>
+      <Text style={defaultButton.text}>Crear equipo</Text>
+    </Pressable>
+  </View>
+</View>
   );
 };
 
