@@ -1,67 +1,62 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Task } from './entities/tasks.entity';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { Task, TaskDocument } from './entities/tasks.entity';
 import { CreateTaskDto, UpdateTaskDto, GetTasksDto } from './dto/tasks.dto';
 
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectRepository(Task)
-    private readonly taskRepository: Repository<Task>,
+    @InjectModel(Task.name)
+    private readonly taskModel: Model<TaskDocument>,
   ) {}
 
   async createTask(createTaskDto: CreateTaskDto) {
-    const newTask = this.taskRepository.create({
-      ...createTaskDto,
-      responsible: { id: createTaskDto.responsible },
-    });
-    const savedTask = await this.taskRepository.save(newTask);
+    const newTask = new this.taskModel(createTaskDto);
+    const savedTask = await newTask.save();
     return savedTask;
   }
 
   async getTasks(getTasksDto: GetTasksDto) {
-    //Buscar una tarea por titulo, responsable o estatus
     const { search, responsible, status } = getTasksDto;
-    const query = this.taskRepository.createQueryBuilder('task');
+    const query = {};
 
     if (search) {
-      query.andWhere('task.title LIKE :search', { search: `%${search}%` });
+      query['title'] = { $regex: new RegExp(search, 'i') };
     }
 
     if (responsible) {
-      query.andWhere('task.responsible = :responsible', { responsible });
+      query['responsible'] = responsible;
     }
 
     if (status) {
-      query.andWhere('task.status = :status', { status });
+      query['status'] = status;
     }
 
-    const tasks = await query.getMany();
+    const tasks = await this.taskModel.find(query);
     return tasks;
   }
 
-  async updateTask(id: number, updateTaskDto: UpdateTaskDto) {
-    const task = await this.taskRepository.findOne({ where: { id } });
-
+  async updateTask(id: string, updateTaskDto: UpdateTaskDto) {
+    const task = await this.taskModel.findById(id);
     if (!task) {
       throw new NotFoundException('Tarea no encontrada');
     }
 
-    const updatedTask = { ...task, ...updateTaskDto, responsible: { id: updateTaskDto.responsible } };
-    const savedTask = await this.taskRepository.save(updatedTask);
+    Object.assign(task, updateTaskDto);
+    const savedTask = await task.save();
     return savedTask;
   }
 
-  async deleteTask(id: number) {
-    const task = await this.taskRepository.findOne({ where: { id } });
+  async deleteTask(id: string) {
+    const task = await this.taskModel.findById(id);
 
     if (!task) {
       throw new NotFoundException('Tarea no encontrada');
     }
 
     task.isDeleted = true;
-    const savedTask = await this.taskRepository.save(task);
+    const savedTask = await task.save();
     return savedTask;
   }
 }

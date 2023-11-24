@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import header from "./components/header";
-import container from "./components/container";
+import { container } from "./components/container";
 import { smallButton } from "./components/button";
 import normalInput from "./components/input";
 import { Pressable } from "react-native";

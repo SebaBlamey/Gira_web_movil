@@ -3,8 +3,10 @@ import { Image, View, Text, StyleSheet, TouchableOpacity, Pressable } from "reac
 import styles from "./components/styles";
 import header from "./components/header";
 import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
-import button from "./components/button";
-import container from "./components/container";
+import button, { defaultButton } from "./components/button";
+import { container, pretty, prettyContainer } from "./components/container";
+
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const UserScreen: React.FC = () => {
   
@@ -24,25 +26,27 @@ const UserScreen: React.FC = () => {
 
   return (
 
-    <View style={styles.container}>
-      <Pressable onPress={navigateToEditUser} style={styles.button}>
-        <Text >Editar informacion del usuario</Text>
-      </Pressable>
-
-
+    <View style={{...prettyContainer.container, flex:1,justifyContent:'flex-start'}}>
+      <View style={prettyContainer.headerContainer}>
       <Image
         source={require('../../assets/persona.png')} 
-        style={styles.image}
+        style={{...styles.image}}
       />
-      <Text style={header.style}>Usuario: {userName}</Text>
-      
-      <Text style={header.subheader}>Correo: {email}{'\n'}</Text>
-
+      <Text style={header.style}>Bienvenido {userName}!</Text>
+      </View>
+      <View style={{flex:1, justifyContent:'center'}}>
       <Pressable onPress={navigateToTeamsPage}>
         <Text style={styles.team}>Información de equipos</Text>
       </Pressable>
+      <Pressable
+       style={defaultButton.style}
+       onPress={navigateToEditUser}>
+        <Text style={defaultButton.text}>Editar Perfil</Text>
+      </Pressable>
+      </View>
     </View>
   );
+  
 };
 
 export default UserScreen;

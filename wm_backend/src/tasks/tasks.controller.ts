@@ -18,12 +18,12 @@ export class TasksController {
   }
   
   @Put(':id')
-  updateTask(@Param('id') id: number, @Body() updateTaskDto: UpdateTaskDto) {
+  updateTask(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return this.tasksService.updateTask(id, updateTaskDto);
   }
 
   @Delete(':id')
-  deleteTask(@Param('id') id: number) {
+  deleteTask(@Param('id') id: string) {
     return this.tasksService.deleteTask(id);
   }
 }

@@ -1,33 +1,35 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 import { User } from 'src/users/user.entity';
 import { Trabajo } from 'src/proyect/entities/trabajo.entity';
 
-@Entity()
-export class Task {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
+@Schema()
+export class Task extends Document {
+  @Prop({ required: true })
   title: string;
 
-  @ManyToOne(() => User, { eager: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
   creator: User;
 
-  @ManyToOne(() => User, { eager: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
   responsible: User;
 
-  @ManyToOne(() => Trabajo, { eager: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Trabajo', required: true })
   trabajo: Trabajo;
 
-  @Column({ default: 'pending' })
+  @Prop({ default: 'pending' })
   status: string;
 
-  @Column({ nullable: true })
+  @Prop({ type: Date, default: null })
   startDate: Date;
 
-  @Column({ nullable: true })
+  @Prop({ type: Date, default: null })
   endDate: Date;
 
-  @Column({ default: false })
+  @Prop({ default: false })
   isDeleted: boolean;
 }
+
+export const TaskSchema = SchemaFactory.createForClass(Task);
+
+export type TaskDocument = Task & Document;

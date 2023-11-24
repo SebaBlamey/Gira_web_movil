@@ -32,4 +32,23 @@ export const smallButton = StyleSheet.create({
   },
 });
 
+export const defaultButton = StyleSheet.create({
+  style: {
+    backgroundColor: "#0DF5E3",
+    padding: 10,
+    borderRadius: 10,
+    width: 100, 
+    height: 50, 
+    alignItems: "center",
+    justifyContent: 'center', 
+    marginTop: 5,
+  },
+  text: {
+    color: "#201A30",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+});
+
+
 export default button;

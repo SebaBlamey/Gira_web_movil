@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import styles from "./components/styles";
 import { useRoute,useNavigation } from "@react-navigation/native";
-import container from "./components/container";
+import { container } from "./components/container";
 import header from "./components/header";
 
 interface Equipo {

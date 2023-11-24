@@ -10,11 +10,11 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import normalInput from "./components/input";
-import container from "./components/container";
 import { header } from "./components/header";
 import { smallButton } from "./components/button";
 import { Pressable } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { container } from "./components/container";
 
 const LoginScreen: React.FC = () => {
   const [username, setUsename] = useState("");
@@ -56,7 +56,7 @@ const LoginScreen: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/users/login", {
+      const response = await fetch("http://10.0.2.2:3000/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
