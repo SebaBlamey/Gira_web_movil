@@ -5,13 +5,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EquipoModule } from './team/equipo.module';
 import { TrabajoModule } from './proyect/trabajo.module';
+import { TasksModule } from './tasks/tasks.module';
+
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost:27017/user_db'),
     UserModule,
     EquipoModule,
-    TrabajoModule
+    TrabajoModule,
+    TasksModule
   ],
   controllers: [AppController],
   providers: [AppService],
