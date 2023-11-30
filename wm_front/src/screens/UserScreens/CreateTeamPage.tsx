@@ -29,6 +29,9 @@ const CreateTeamPage: React.FC = () => {
   const [teamNameValid, setTeamNameValid] = useState(true);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [existingTeam, setExistingTeam] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
 
   useFocusEffect(
     React.useCallback(() => {
@@ -45,7 +48,7 @@ const CreateTeamPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/equipo/create", {
+      const response = await fetch("http://10.0.2.2:3000/equipo/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -99,7 +102,7 @@ const CreateTeamPage: React.FC = () => {
           <Text style={{ color: "red" }}>El equipo no es valido</Text>
         ) : null}
         <TextInput
-          style={normalInput.input}
+          style={{...normalInput.input,width: 200}}
           placeholder="Nombre del equipo"
           placeholderTextColor={"#454052"}
           value={teamName}
@@ -112,7 +115,7 @@ const CreateTeamPage: React.FC = () => {
           <Text style={{ color: "red" }}>El rol no es valido</Text>
         ) : null}
         <TextInput
-          style={normalInput.input}
+          style={{...normalInput.input,width: 200}}
           placeholder="Rol"
           placeholderTextColor={"#454052"}
           value={roleName}

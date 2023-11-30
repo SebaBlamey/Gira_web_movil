@@ -3,6 +3,7 @@ import { Text, Pressable, StyleSheet } from "react-native";
 
 const normalInput = StyleSheet.create({
     input: {
+      maxWidth:400,
       width: "80%",
       padding: 10,
       marginBottom: 10,

@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import Config from "react-native-config";
 import header from "./components/header";
 import { container } from "./components/container";
 import { smallButton } from "./components/button";
@@ -17,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/native";
 
 const RegisterScreen: React.FC = () => {
+  const ipAddres = '10.0.2.2';
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -59,9 +61,10 @@ const RegisterScreen: React.FC = () => {
     }
 
     setLoading(true);
+    console.log(`La ip definida es ${ipAddres}`)
 
     try {
-      const response = await fetch("http://localhost:3000/users/register", {
+      const response = await fetch(`http://${ipAddres}:3000/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +96,7 @@ const RegisterScreen: React.FC = () => {
   return (
     <View style={container.style}>
       <Text style={header.style}>Registro</Text>
-      <Text style={header.subheader}>Registre su cuenta</Text>
+      <Text style={header.subheader}>Registre su nueva cuenta</Text>
       {emailValid || !email ? null : (
         <Text style={{ color: "red" }}>{"El correo no es valido"}</Text>
       )}

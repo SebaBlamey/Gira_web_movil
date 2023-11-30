@@ -34,7 +34,7 @@ const TeamPage: React.FC = () => {
   useEffect(() => {
     const userId = userData.user._id;
     console.log(`userID: ${userId}`);
-    fetch(`http://localhost:3000/equipo/${userId}/findTeamsFromUserId`)
+    fetch(`http://10.0.2.2:3000/equipo/${userId}/findTeamsFromUserId`)
       .then((response) => response.json())
       .then((data) => {
         setTeams(data);

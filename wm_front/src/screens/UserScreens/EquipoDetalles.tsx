@@ -3,15 +3,18 @@ import {
   View,
   Image,
   Text,
-  TextInput,
   Pressable,
   ActivityIndicator,
 } from "react-native";
 import styles from "../components/styles";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { prettyContainer } from "../components/container";
-import normalInput from "../components/input";
 import { smallButton } from "../components/button";
+import { SelectList } from "react-native-dropdown-select-list";
+import { KeyboardAvoidingView } from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 interface User {
   _id: string;
@@ -29,6 +32,8 @@ const EquipoDetalles: React.FC = () => {
   const route = useRoute();
   const teamData = route.params?.equipo;
   const [integrantes, setIntegrantes] = useState<User[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,6 +48,21 @@ const EquipoDetalles: React.FC = () => {
       setLoading(true);
     }, [])
   );
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const response = await fetch("http://10.0.2.2:3000/users/all");
+        if (response.ok) {
+          const data = await response.json();
+          setAllUsers(data);
+        }
+      } catch (error) {
+        console.error("Error al obtener la lista de usuarios", error);
+      }
+    };
+
+    fetchAllUsers();
+  }, []);
 
   useEffect(() => {
     const fetchUsernames = async () => {
@@ -50,7 +70,7 @@ const EquipoDetalles: React.FC = () => {
         teamData.integrantes.map(async (integrante: Integrante) => {
           const userId = integrante.user;
           const response = await fetch(
-            `http://localhost:3000/users/findById/${userId}`,
+            `http://10.0.2.2:3000/users/findById/${userId}`,
             {
               method: "GET",
               headers: {
@@ -87,16 +107,16 @@ const EquipoDetalles: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/equipo/join", {
+      const response = await fetch("http://10.0.2.2:3000/equipo/join", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            _idTeam: teamData._id,
-            _userEmail: email,
-            _role: "Miembro",
-          }),
+          _idTeam: teamData._id,
+          _userEmail: email,
+          _role: "Miembro",
+        }),
       });
       if (response.ok) {
         shouldLoad ? setShouldLoad(false) : setShouldLoad(true);
@@ -119,92 +139,119 @@ const EquipoDetalles: React.FC = () => {
   const proyecto = teamData?.trabajo || "Ninguno";
 
   return (
-    <View
-      style={{
-        ...prettyContainer.container,
-        flex: 1,
-        justifyContent: "flex-start",
-      }}
+    <KeyboardAvoidingView
+      behavior='height'
+      style={{ flex: 1 }}
     >
-      <View style={prettyContainer.headerContainer}>
-        <Image
-          source={require("../../../assets/team-logo.png")}
-          style={{ ...styles.image }}
-        />
-        <Text style={{ ...prettyContainer.header, fontWeight: "bold" }}>
-          {teamName.toString().toUpperCase()}
-        </Text>
-      </View>
       <View
         style={{
-          alignContent: "flex-start",
-          marginTop: "10%",
-          width: "80%",
-          borderWidth: 1,
-          borderColor: "#0DF5E3",
-          borderRadius: 10,
-          alignSelf: "center",
-          padding: 10,
+          ...prettyContainer.container,
+          flex: 1,
+          justifyContent: "flex-start",
         }}
       >
-        <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
-          Integrantes:
-        </Text>
-        <View>
-          {integrantes.map((user, index) => (
-            <Text key={index} style={{ color: "white", fontSize: 16 }}>
-              {user.username} - {user.email}
-            </Text>
-          ))}
+        <View style={prettyContainer.headerContainer}>
+          <Image
+            source={require("../../../assets/team-logo.png")}
+            style={{ ...styles.image }}
+          />
+          <Text style={{ ...prettyContainer.header, fontWeight: "bold" }}>
+            {teamName.toString().toUpperCase()}
+          </Text>
         </View>
-      </View>
-      <View
-        style={{
-          alignContent: "flex-start",
-          marginTop: "5%",
-          width: "80%",
-          borderWidth: 1,
-          borderColor: "#0DF5E3",
-          borderRadius: 10,
-          alignSelf: "center",
-          padding: 10,
-        }}
-      >
-        <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
-          Proyecto actual
+        <View
+          style={{
+            alignContent: "flex-start",
+            marginTop: "10%",
+            width: "80%",
+            borderWidth: 1,
+            borderColor: "#0DF5E3",
+            borderRadius: 10,
+            alignSelf: "center",
+            padding: 10,
+          }}
+        >
+          <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
+            Integrantes:
+          </Text>
+          <View>
+            {integrantes.map((user, index) => (
+              <Text key={index} style={{ color: "white", fontSize: 16 }}>
+                {user.username} - {user.email}
+              </Text>
+            ))}
+          </View>
+        </View>
+        <View
+          style={{
+            alignContent: "flex-start",
+            marginTop: "5%",
+            width: "80%",
+            borderWidth: 1,
+            borderColor: "#0DF5E3",
+            borderRadius: 10,
+            alignSelf: "center",
+            padding: 10,
+          }}
+        >
+          <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
+            Proyecto actual
+          </Text>
+          <Text style={{ color: "white", fontSize: 16 }}>{proyecto}.</Text>
+        </View>
+        <Text style={{ color: "white", fontSize: 20, marginTop: "10%" }}>
+          Ingresar nuevo miembro:
         </Text>
-        <Text style={{ color: "white", fontSize: 16 }}>{proyecto}.</Text>
+        <SelectList
+          boxStyles={{
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: "#0DF5E3",
+            width: 300,
+            alignSelf: "center",
+            marginTop: "5%",
+          }}
+          inputStyles={{color:'white',fontSize:16}}
+          placeholder="Seleccionar usuario"
+          notFoundText="No se encuentra el usuario"
+          dropdownStyles={{
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: "#0DF5E3",
+            maxWidth: 300,
+            width: 300,
+            alignSelf: "center",
+          }}
+          dropdownTextStyles={{color:'white',fontSize:16}}
+          closeicon={<FontAwesomeIcon icon={faXmarkCircle} color="white" size={20} />}
+          searchicon={<FontAwesomeIcon icon={faMagnifyingGlass} color="white" size={20} />}
+          searchPlaceholder="Buscar usuario"
+          setSelected={(user) => setSelectedUser(user)}
+          data={allUsers.map((user) => ({
+            key: user._id,
+            value: `${user.username} - ${user.email}`,
+          }))}
+          save="value"
+        />
+
+        <Pressable
+          style={{...smallButton.style,marginTop:10}}
+          onPress={handleNewMemberTeam}
+          disabled={!loading || !selectedUser}
+        >
+          {!loading ? (
+            <ActivityIndicator size="small" color="#201A30" />
+          ) : (
+            <Text style={smallButton.text}>{"Agregar"}</Text>
+          )}
+        </Pressable>
+        {userAdded ? (
+          <Text style={{ color: "green" }}>
+            {"Usuario agregado exitosamente"}
+          </Text>
+        ) : null}
       </View>
-      <Text style={{ color: "white", fontSize: 20, marginTop: "10%" }}>
-        Agrege a otro miembro
-      </Text>
-      <TextInput
-        style={normalInput.input}
-        placeholder="Correo nuevo miembro"
-        placeholderTextColor="#454052"
-        value={email}
-        onChangeText={(text) => {
-          setEmail(text);
-          setAllcamps(true);
-        }}
-      />
-      <Pressable
-        style={smallButton.style}
-        onPress={handleNewMemberTeam}
-        disabled={!loading}
-      >
-        {!loading ? (
-          <ActivityIndicator size="small" color="#201A30" />
-        ) : (
-          <Text style={smallButton.text}>{"Registrarse"}</Text>
-        )}
-      </Pressable>
-      {userAdded ? (
-        <Text style={{ color: "green" }}>
-          {"Usuario agregado exitosamente"}
-        </Text>
-      ) : null}
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

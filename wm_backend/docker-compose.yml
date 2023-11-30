@@ -10,14 +10,7 @@ services:
       NODE_ENV: development
     ports:
       - 3000:3000
-  database:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: mydb
-    ports:
-      - 5432:5432
+    network_mode: "host"
   mongodb:
     image: mongo:latest
     ports:

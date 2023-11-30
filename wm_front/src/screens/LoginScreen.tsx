@@ -56,7 +56,7 @@ const LoginScreen: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/users/login", {
+      const response = await fetch("http://10.0.2.2:3000/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,20 +66,22 @@ const LoginScreen: React.FC = () => {
           password: password,
         }),
       });
-
+      if(response){
+        setLoading(false);
+      }
       if (response.ok) {
         const data = await response.json();
         console.log(data);
         setTimeout(() => {
           navigation.navigate("UserScreen", { userData: data });
         }, 2000);
-        setLoading(false);
       } else if (response.status == 409) {
         const errorResponse = await response.json();
         if (errorResponse.message) {
           setExistingUser(true);
         }
       }
+    
     } catch (error) {
       console.error("Error de red", error);
     }
