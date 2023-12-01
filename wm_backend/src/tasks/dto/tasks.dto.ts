@@ -1,4 +1,6 @@
 import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { Trabajo } from 'src/proyect/entities/trabajo.entity';
+import { User } from 'src/users/user.entity';
 
 
 export class TasksDto {
@@ -8,11 +10,19 @@ export class TasksDto {
 
   @IsString()
   @IsOptional()
-  proyectID?: string;
+  fechaInicio?:string;
 
   @IsString()
   @IsOptional()
-  userID?: string;
+  fechaFin?:string;
+
+  @IsString()
+  @IsNotEmpty()
+  proyectID: Trabajo;
+
+  @IsString()
+  @IsOptional()
+  userID?: User;
 
   @IsString()
   @IsOptional()
@@ -20,5 +30,5 @@ export class TasksDto {
 
   @IsString()
   @IsNotEmpty()
-  estado: 'PENDIENTE' | 'EN PROCESO' | 'COMPLETADO';
+  estado: 'PENDIENTE' | 'EN PROCESO' | 'COMPLETADO' | 'CERRADO';
 }

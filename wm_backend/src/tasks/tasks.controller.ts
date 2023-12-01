@@ -6,7 +6,7 @@ import { TasksDto } from './dto/tasks.dto';
 export class TaskController {
   constructor(private tareaService: TaskService) {}
 
-  @Post()
+  @Post('create')
   async crearTarea(@Body() tareaDto: TasksDto) {
     return this.tareaService.crearTarea(tareaDto);
   }
@@ -24,5 +24,7 @@ export class TaskController {
   async agregarComentarioTarea(@Param('id') id: string, @Body() comentario: { usuario: string, comentario: string }) {
     return this.tareaService.agregarComentarioTarea(id, comentario);
   }
+
+
   
 }
