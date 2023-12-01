@@ -15,6 +15,15 @@ export class EquipoController {
   create(@Body() createEquipoDto: CreateEquipoDto) {
     return this.equipoService.create(createEquipoDto);
   }
+  @Get(':idTeam/:idUser/userOnTeam') // debe retornar un boolean
+  userOnTeam(@Param('idTeam') _idTeam: string, @Param('idUser') _idUser: string) {
+    return this.equipoService.userOnTeam(_idTeam, _idUser);
+  }
+
+  @Get(':idTeam/:idUser/roleOnTeam') // debe retornar un string
+  roleOnTeam(@Param('idTeam') _idTeam: string, @Param('idUser') _idUser: string) {
+    return this.equipoService.roleOnTeam(_idTeam, _idUser);
+  }
   
   @Post('/join')
   Join(@Body() { _idTeam, _userEmail, _role }: { _idTeam: string, _userEmail: string, _role: string }) {

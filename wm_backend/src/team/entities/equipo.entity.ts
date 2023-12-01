@@ -11,6 +11,7 @@ export class Equipo extends Document {
   @Prop({ type: Types.ObjectId, ref: 'Trabajo', default: null })
   trabajo?: Trabajo;
 
+
   @Prop({ type: [{ user: { type: Types.ObjectId, ref: 'User' }, role: String }] })
   integrantes?: { user: Types.ObjectId, role: string }[];
 }

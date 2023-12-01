@@ -26,11 +26,8 @@ const CreateTeamPage: React.FC = () => {
   const route = useRoute();
   const userData = route.params?.userData;
   const [allcamps, setAllcamps] = useState(true);
-  const [teamNameValid, setTeamNameValid] = useState(true);
   const [shouldLoad, setShouldLoad] = useState(false);
-  const [existingTeam, setExistingTeam] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [existingTeam, setExistingTeam] = useState(false)
 
 
   useFocusEffect(
