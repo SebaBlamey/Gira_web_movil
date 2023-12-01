@@ -51,7 +51,7 @@ const EquipoDetalles: React.FC = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const response = await fetch("http://10.0.2.2:3000/users/all");
+        const response = await fetch("http://localhost:3000/users/all");
         if (response.ok) {
           const data = await response.json();
           setAllUsers(data);
@@ -70,7 +70,7 @@ const EquipoDetalles: React.FC = () => {
         teamData.integrantes.map(async (integrante: Integrante) => {
           const userId = integrante.user;
           const response = await fetch(
-            `http://10.0.2.2:3000/users/findById/${userId}`,
+            `http://localhost:3000/users/findById/${userId}`,
             {
               method: "GET",
               headers: {
@@ -107,7 +107,7 @@ const EquipoDetalles: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://10.0.2.2:3000/equipo/join", {
+      const response = await fetch("http://localhost:3000/equipo/join", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
