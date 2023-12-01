@@ -1,62 +1,32 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Task, TaskDocument } from './entities/tasks.entity';
-import { CreateTaskDto, UpdateTaskDto, GetTasksDto } from './dto/tasks.dto';
+import { Model } from 'mongoose';
+import { Task, TaskDocument } from './entities//tasks.entity';
+import { TasksDto } from './dto/tasks.dto';
 
 @Injectable()
-export class TasksService {
-  constructor(
-    @InjectModel(Task.name)
-    private readonly taskModel: Model<TaskDocument>,
-  ) {}
+export class TaskService {
+  constructor(@InjectModel(Task.name) private taskModel: Model<TaskDocument>) {}
 
-  async createTask(createTaskDto: CreateTaskDto) {
-    const newTask = new this.taskModel(createTaskDto);
-    const savedTask = await newTask.save();
-    return savedTask;
+  async crearTarea(taskDto: TasksDto): Promise<Task> {
+    const task = new this.taskModel(taskDto);
+    return task.save();
+  }
+  async actualizarEstadoTarea(id: string, estado: 'PENDIENTE' | 'EN PROCESO' | 'COMPLETADO'): Promise<Task> {
+    const task = await this.taskModel.findByIdAndUpdate(id, { estado }, { new: true });
+    return task;
   }
 
-  async getTasks(getTasksDto: GetTasksDto) {
-    const { search, responsible, status } = getTasksDto;
-    const query = {};
-
-    if (search) {
-      query['title'] = { $regex: new RegExp(search, 'i') };
-    }
-
-    if (responsible) {
-      query['responsible'] = responsible;
-    }
-
-    if (status) {
-      query['status'] = status;
-    }
-
-    const tasks = await this.taskModel.find(query);
-    return tasks;
+  async agregarUsuariosTarea(id: string, usuarios: { user: string }): Promise<Task> {
+    const task = await this.taskModel.findByIdAndUpdate(id, { $push: { userID: { $each: usuarios } } }, { new: true });
+    return task;
   }
 
-  async updateTask(id: string, updateTaskDto: UpdateTaskDto) {
-    const task = await this.taskModel.findById(id);
-    if (!task) {
-      throw new NotFoundException('Tarea no encontrada');
-    }
-
-    Object.assign(task, updateTaskDto);
-    const savedTask = await task.save();
-    return savedTask;
+  async agregarComentarioTarea(id: string, comentario: { usuario: string, comentario: string }): Promise<Task> {
+    const task = await this.taskModel.findByIdAndUpdate(id, { $push: { comentarios: comentario } }, { new: true });
+    return task;
   }
-
-  async deleteTask(id: string) {
-    const task = await this.taskModel.findById(id);
-
-    if (!task) {
-      throw new NotFoundException('Tarea no encontrada');
-    }
-
-    task.isDeleted = true;
-    const savedTask = await task.save();
-    return savedTask;
-  }
+  
+  
+  
 }

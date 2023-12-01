@@ -1,43 +1,24 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
-export class CreateTaskDto {
+
+export class TasksDto {
+  @IsString()
   @IsNotEmpty()
-  title: string;
+  nombre: string;
 
+  @IsString()
   @IsOptional()
-  responsible: string;
+  proyectID?: string;
 
+  @IsString()
+  @IsOptional()
+  userID?: string;
+
+  @IsString()
+  @IsOptional()
+  observacion?: string;
+
+  @IsString()
   @IsNotEmpty()
-  projectId: number;
-}
-
-export class UpdateTaskDto {
-  @IsOptional()
-  title: string;
-
-  @IsOptional()
-  responsible: string;
-
-  @IsOptional()
-  projectId: number;
-
-  @IsOptional()
-  status: string;
-
-  @IsOptional()
-  startDate: Date;
-
-  @IsOptional()
-  endDate: Date;
-}
-
-export class GetTasksDto {
-  @IsOptional()
-  search: string;
-
-  @IsOptional()
-  responsible: string;
-
-  @IsOptional()
-  status: string;
+  estado: 'PENDIENTE' | 'EN PROCESO' | 'COMPLETADO';
 }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, IsArray, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsArray, ValidateNested, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class IntegranteDto{
@@ -16,11 +16,13 @@ export class CreateEquipoDto {
   nombre: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  trabajoId: string;
+  @IsString()
+  @IsOptional()
+  trabajoId?: string;
 
   @IsArray()
   @ValidateNested({each: true})
+  @IsOptional()
   @Type(() => IntegranteDto)
   integrantes?: IntegranteDto[];
 }
