@@ -15,9 +15,13 @@ export class TrabajoService {
   ){}
 
   async findAll(): Promise<Trabajo[]> {
-    return await this.trabajoModel.find().exec();
+    try {
+      return await this.trabajoModel.find().exec();
+    } catch (error) {
+      console.error('Error al buscar trabajos:', error);
+      throw error; 
+    }
   }
-
   async findById(_id: string): Promise<Trabajo | null> {
     return await this.trabajoModel.findById(_id).exec();
   }
