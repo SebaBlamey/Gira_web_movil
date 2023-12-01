@@ -12,6 +12,8 @@ import RecoverPassToken from "../src/screens/Recover/RecoverPassToken";
 import ProyectoPage from "../src/screens/UserScreens/ProyectPageScreen";
 import CreateTeamPage from "../src/screens/UserScreens/CreateTeamPage";
 import EquipoDetalles from "../src/screens/UserScreens/EquipoDetalles";
+import TasksPage from "../src/screens/UserScreens/TasksPage";
+import MyTasks from "../src/screens/UserScreens/MyTasks";
 //import MainProyecto from "../src/screens/UserScreens/MainProyecto";
 //import CreateTeam from "../src/screens/UserScreens/CreateTeam";
 const Stack = createStackNavigator();
@@ -46,6 +48,13 @@ const StackNavigator: React.FC = () => {
         }}
       />
       <Stack.Screen
+        name="MyTasks"
+        component={MyTasks}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
         name="UserScreen"
         component={UserScreen}
         options={{
@@ -62,6 +71,13 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen
         name="ProyectPage"
         component={ProyectoPage}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="TasksPage"
+        component={TasksPage}
         options={{
           headerShown: true,
         }}

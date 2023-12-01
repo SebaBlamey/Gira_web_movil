@@ -4,6 +4,9 @@ import { User } from 'src/users/user.entity';
 
 
 export class TasksDto {
+
+  createTaskId:User;
+
   @IsString()
   @IsNotEmpty()
   nombre: string;

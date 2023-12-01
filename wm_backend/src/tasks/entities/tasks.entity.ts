@@ -5,6 +5,10 @@ import { User } from 'src/users/user.entity';
 
 @Schema()
 export class Task extends Document {
+
+  @Prop({ type: Types.ObjectId, ref: 'User' ,required:true})
+  createTaskId: User
+
   @Prop({ required: true })
   nombre: string;
 
@@ -30,7 +34,6 @@ export class Task extends Document {
   comentarios?: { usuario: Types.ObjectId, comentario: string }[];
 
 }
-
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
 

@@ -36,6 +36,12 @@ const UserScreen: React.FC = () => {
   const navigateToProyectos = () => {
     navigation.navigate("ProyectPage", { userData });
   };
+  const navigateToTasksPage = () => {
+    navigation.navigate("TasksPage", { userData });
+  };
+  const navigateToMyTasks = () => {
+    navigation.navigate("MyTasks", { userData });
+  };
 
   const date = new Date();
   // quiero que la fecha se vea como Martes 20 de Julio
@@ -69,7 +75,13 @@ const UserScreen: React.FC = () => {
         <Pressable onPress={navigateToTeamsPage} style={defaultButton.style}>
           <Text style={defaultButton.text}>Equipos</Text>
         </Pressable>
-        <Pressable style={defaultButton.style} onPress={navigateToEditUser}>
+        <Pressable onPress={navigateToTasksPage} style={defaultButton.style}>
+          <Text style={defaultButton.text}>Crear Tareas</Text>
+        </Pressable>
+        <Pressable onPress={navigateToTasksPage} style={defaultButton.style}>
+          <Text style={defaultButton.text}>Ver Mis Tareas</Text>
+        </Pressable>
+        <Pressable style={defaultButton.style} onPress={navigateToMyTasks}>
           <Text style={defaultButton.text}>Editar perfil</Text>
         </Pressable>
       </View>
