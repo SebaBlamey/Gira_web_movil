@@ -1,35 +1,30 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
-import { User } from 'src/users/user.entity';
+import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 import { Trabajo } from 'src/proyect/entities/trabajo.entity';
 
 @Schema()
 export class Task extends Document {
   @Prop({ required: true })
-  title: string;
+  nombre: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
-  creator: User;
+  @Prop({ type: Types.ObjectId, ref: 'Trabajo', default: null, required: false })
+  proyectID?: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
-  responsible: User;
+  @Prop({ type: [{ user: { type: Types.ObjectId, ref: 'User' }}] })
+  userID?: { user: Types.ObjectId };
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Trabajo', required: true })
-  trabajo: Trabajo;
+  @Prop()
+  observacion?: string;
 
-  @Prop({ default: 'pending' })
-  status: string;
+  @Prop({ required: true })
+  estado: 'PENDIENTE' | 'EN PROCESO' | 'COMPLETADO';
 
-  @Prop({ type: Date, default: null })
-  startDate: Date;
+  @Prop({ type: [{ usuario: { type: Types.ObjectId, ref: 'User' }, comentario: String }] })
+  comentarios?: { usuario: Types.ObjectId, comentario: string }[];
 
-  @Prop({ type: Date, default: null })
-  endDate: Date;
-
-  @Prop({ default: false })
-  isDeleted: boolean;
 }
+
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
 
-export type TaskDocument = Task & Document;
+export type TaskDocument = Task & Document

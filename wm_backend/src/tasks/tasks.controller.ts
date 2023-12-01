@@ -1,29 +1,28 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
-import { TasksService } from './tasks.service';
-import { CreateTaskDto, UpdateTaskDto, GetTasksDto } from './dto/tasks.dto';
-
+import { Controller, Post, Body, Patch, Param } from '@nestjs/common';
+import { TaskService } from './tasks.service';
+import { TasksDto } from './dto/tasks.dto';
 
 @Controller('tasks')
-export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+export class TaskController {
+  constructor(private tareaService: TaskService) {}
 
   @Post()
-  createTask(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.createTask(createTaskDto);
+  async crearTarea(@Body() tareaDto: TasksDto) {
+    return this.tareaService.crearTarea(tareaDto);
   }
 
-  @Get()
-  getTasks(@Query() getTasksDto: GetTasksDto) {
-    return this.tasksService.getTasks(getTasksDto);
+  @Patch(':id/estado')
+  async actualizarEstadoTarea(@Param('id') id: string, @Body('estado') estado: 'PENDIENTE' | 'EN PROCESO' | 'COMPLETADO') {
+    return this.tareaService.actualizarEstadoTarea(id, estado);
+}
+  @Patch(':id/usuarios')
+  async agregarUsuariosTarea(@Param('id') id: string, @Body('usuarios') usuarios: { user: string}) {
+    return this.tareaService.agregarUsuariosTarea(id, usuarios);
+}
+
+  @Post(':id/comentarios')
+  async agregarComentarioTarea(@Param('id') id: string, @Body() comentario: { usuario: string, comentario: string }) {
+    return this.tareaService.agregarComentarioTarea(id, comentario);
   }
   
-  @Put(':id')
-  updateTask(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.updateTask(id, updateTaskDto);
-  }
-
-  @Delete(':id')
-  deleteTask(@Param('id') id: string) {
-    return this.tasksService.deleteTask(id);
-  }
 }
