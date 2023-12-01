@@ -13,6 +13,7 @@ import ProyectoPage from "../src/screens/UserScreens/ProyectPageScreen";
 import CreateTeamPage from "../src/screens/UserScreens/CreateTeamPage";
 import EquipoDetalles from "../src/screens/UserScreens/EquipoDetalles";
 import CreateProjectPage from "../src/screens/UserScreens/CreateProjectPage";
+import ProjectDetalles from "../src/screens/UserScreens/ProjectDetalles";
 const Stack = createStackNavigator();
 
 const StackNavigator: React.FC = () => {
@@ -47,6 +48,14 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen
         name="UserScreen"
         component={UserScreen}
+        options={{
+          headerShown: true,
+        }}
+      />
+
+<Stack.Screen
+        name="ProyectoDetalles"
+        component={ProjectDetalles}
         options={{
           headerShown: true,
         }}

@@ -22,7 +22,8 @@ const ProyectoPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const handleProyectoButtonClick = (proyecto: Proyecto) => {
-    console.log(proyecto);
+    navigation.navigate("ProyectoDetalles", { proyecto });
+    //console.log(proyecto);
   }
   const navigateToCreateProject = () => {
     navigation.navigate("CreateProject", { userData });
@@ -57,7 +58,7 @@ const ProyectoPage: React.FC = () => {
         />
       </View>
       <Text style={{fontSize:20, color:'#fff',marginTop:'10%'}}>
-        Proyectos actuales:
+        Proyectos existentes:
       </Text>
       {projects.length === 0 ? (
         <Text style={{ fontSize: 15, color: "#fff" }}>
@@ -67,7 +68,8 @@ const ProyectoPage: React.FC = () => {
         projects.map((project) => (
           <Pressable
             key={project._id}
-            
+            style={equipoButton.style}
+            onPress={() => handleProyectoButtonClick(project)}
           >
             <Text style={equipoButton.text}>{project.nombre}</Text>
           </Pressable>

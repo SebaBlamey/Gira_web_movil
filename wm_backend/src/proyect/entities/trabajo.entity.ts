@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Equipo, EquipoDocument } from '../../team/entities/equipo.entity';
+import { IsOptional } from 'class-validator';
 
 @Schema({ collection: 'trabajos' })
 export class Trabajo extends Document {
@@ -9,7 +10,8 @@ export class Trabajo extends Document {
 
   // agrega una descripcion al trabajo
   @Prop()
-  descripcion: string;
+  @IsOptional()
+  descripcion?: string;
 
   @Prop({ type: [{ Equipo: {type: Types.ObjectId, ref: 'Equipo'} }] }) 
   equipos?: { Equipo: Types.ObjectId }[];

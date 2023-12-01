@@ -40,9 +40,9 @@ export class EquipoController {
     return this.equipoService.findEquipoFromUser(_id);
   }
 
-  @Get('/findById')
-  findById(@Body() _id: string) {
-    return this.equipoService.findById(_id);
+  @Get('findById/:id')
+  findById(@Param('id') _id: string) {
+    return this.equipoService.findById(_id); 
   }
 
   @Get('/findByName')

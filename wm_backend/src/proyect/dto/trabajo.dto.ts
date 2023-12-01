@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, IsArray, ValidateNested } from "class-validator";
+import { IsNotEmpty, IsString, IsNumber, IsArray, ValidateNested, IsOptional } from "class-validator";
 import {Type} from 'class-transformer'
 
 class EquipoDto{
@@ -11,6 +11,10 @@ export class CreateTrabajoDto {
     @IsNotEmpty()
     @IsString()
     nombre: string;
+
+    @IsString()
+    @IsOptional()
+    descripcion?: string;
 
     @IsArray()
     @ValidateNested({each: true})
