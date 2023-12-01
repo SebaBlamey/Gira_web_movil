@@ -27,5 +27,19 @@ const normalInput = StyleSheet.create({
       color: "#fff",
       fontSize: 18,
     },
+    
+      descInput: {
+        maxWidth: 400,
+        width: "80%",
+        padding: 15, // Aumenté el padding para hacerlo más grande
+        marginBottom: 10,
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: "#38304C",
+        backgroundColor: "#38304C",
+        alignContent: "center",
+        color: "#fff",
+        fontSize: 20, // Aumenté el tamaño de la fuente
+      },
   });
 export default normalInput;

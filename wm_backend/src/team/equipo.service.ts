@@ -20,8 +20,9 @@ export class EquipoService {
     return await this.equipoModel.find().exec();
   }
 
-  async findById(userId: string): Promise<Equipo | null> {
-    return await this.equipoModel.findById(userId).exec();
+  async findById(teamId: string): Promise<Equipo | null> {
+    console.log(`Buscando equipo con ID: ${teamId}`)
+    return await this.equipoModel.findById(teamId).exec();
   }
 
   async findByName(nombre: string): Promise<Equipo | null> {

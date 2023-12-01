@@ -20,6 +20,11 @@ export class TrabajoController {
     return this.trabajoService.join(_idTrabajo, _idEquipo);
   }
 
+  @Get(':idTrabajo/:idEquipo/equipoOnTrabajo') // debe retornar un boolean
+  equipoOnTrabajo(@Param('idTrabajo') _idTrabajo: string, @Param('idEquipo') _idEquipo: string) {
+    return this.trabajoService.equipoOnTrabajo(_idTrabajo, _idEquipo);
+  }
+
 
   @Get('/findByName')
   findByName(@Body() nombre: string) {

@@ -14,8 +14,8 @@ import CreateTeamPage from "../src/screens/UserScreens/CreateTeamPage";
 import EquipoDetalles from "../src/screens/UserScreens/EquipoDetalles";
 import TasksPage from "../src/screens/UserScreens/TasksPage";
 import MyTasks from "../src/screens/UserScreens/MyTasks";
-//import MainProyecto from "../src/screens/UserScreens/MainProyecto";
-//import CreateTeam from "../src/screens/UserScreens/CreateTeam";
+import CreateProjectPage from "../src/screens/UserScreens/CreateProjectPage";
+import ProjectDetalles from "../src/screens/UserScreens/ProjectDetalles";
 const Stack = createStackNavigator();
 
 const StackNavigator: React.FC = () => {
@@ -61,6 +61,14 @@ const StackNavigator: React.FC = () => {
           headerShown: true,
         }}
       />
+
+<Stack.Screen
+        name="ProyectoDetalles"
+        component={ProjectDetalles}
+        options={{
+          headerShown: true,
+        }}
+      />
       <Stack.Screen
         name="EditUser"
         component={EditUserScreen}
@@ -85,6 +93,14 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen
         name="CreateTeam"
         component={CreateTeamPage}
+        options={{
+          headerShown: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="CreateProject"
+        component={CreateProjectPage}
         options={{
           headerShown: true,
         }}

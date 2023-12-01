@@ -18,15 +18,20 @@ const ProyectoPage: React.FC = () => {
   const route = useRoute();
   const userData = route.params?.userData;
   const [projects, setProjects] = useState<Proyecto[]>([]);
-  const naviagtion = useNavigation();
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
 
   const handleProyectoButtonClick = (proyecto: Proyecto) => {
-    console.log(proyecto);
+    navigation.navigate("ProyectoDetalles", { proyecto });
+    //console.log(proyecto);
   }
+  const navigateToCreateProject = () => {
+    navigation.navigate("CreateProject", { userData });
+    //console.log(proyecto);
+  };
 
   useEffect(() => {
-    fetch(`https://10.0.2.2:3000/trabajo/findAll`)
+    fetch('http://10.0.2.2:3000/trabajo/findAll')
     .then((response) => response.json())
     .then((data) => {
       setProjects(data);
@@ -53,7 +58,7 @@ const ProyectoPage: React.FC = () => {
         />
       </View>
       <Text style={{fontSize:20, color:'#fff',marginTop:'10%'}}>
-        Tus proyectos:
+        Proyectos existentes:
       </Text>
       {projects.length === 0 ? (
         <Text style={{ fontSize: 15, color: "#fff" }}>
@@ -63,12 +68,18 @@ const ProyectoPage: React.FC = () => {
         projects.map((project) => (
           <Pressable
             key={project._id}
-            
+            style={equipoButton.style}
+            onPress={() => handleProyectoButtonClick(project)}
           >
             <Text style={equipoButton.text}>{project.nombre}</Text>
           </Pressable>
         ))
       )}
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Pressable onPress={navigateToCreateProject} style={defaultButton.style}>
+          <Text style={defaultButton.text}>Crear Proyecto</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };

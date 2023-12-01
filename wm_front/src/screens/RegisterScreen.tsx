@@ -18,7 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/native";
 
 const RegisterScreen: React.FC = () => {
-  const ipAddres = 'localhost';
+  const ipAddres = '10.0.2.2';
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -64,7 +64,7 @@ const RegisterScreen: React.FC = () => {
     console.log(`La ip definida es ${ipAddres}`)
 
     try {
-      const response = await fetch(`http://localhost:3000/users/register`, {
+      const response = await fetch(`http://10.0.2.2:3000/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
