@@ -7,8 +7,12 @@ export class Trabajo extends Document {
   @Prop()
   nombre: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Equipo' }] }) 
-  equipos: Types.Array<Record<string, unknown> | EquipoDocument>;
+  // agrega una descripcion al trabajo
+  @Prop()
+  descripcion: string;
+
+  @Prop({ type: [{ Equipo: {type: Types.ObjectId, ref: 'Equipo'} }] }) 
+  equipos?: { Equipo: Types.ObjectId }[];
 }
 
 export const TrabajoSchema = SchemaFactory.createForClass(Trabajo);

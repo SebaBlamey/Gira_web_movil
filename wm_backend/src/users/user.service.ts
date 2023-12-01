@@ -38,6 +38,30 @@ export class UserService {
     return this.userModel.find().exec();
   }
 
+  async userOnTeam(_idTeam: string, _userEmail: string): Promise<boolean> {
+    const equipo = await this.equipoModel.findById(_idTeam);
+    if (!equipo) {
+      console.log('Equipo no encontrado');
+      throw new NotFoundException('Equipo no encontrado');
+    }
+    const user = await this.findByEmail(_userEmail);
+    if (!user) {
+      console.log('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    const integrantes = equipo.integrantes;
+    if (integrantes && integrantes.length > 0) {
+      console.log('El equipo tiene integrantes');
+      const alreadyInTeam = integrantes.some((integrante) => integrante.user.equals(user._id));
+      if (alreadyInTeam) {
+        console.log('El usuario está en el equipo');
+        return true;
+      }
+    }
+    console.log('El usuario no está en el equipo');
+    return false;
+  }
+
   async findByUsername(username: string): Promise<User | undefined> {
     return await this.userModel.findOne({ username: username }).exec();
   }

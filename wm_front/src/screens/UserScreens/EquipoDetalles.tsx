@@ -12,14 +12,13 @@ import { prettyContainer } from "../components/container";
 import { smallButton } from "../components/button";
 import { SelectList } from "react-native-dropdown-select-list";
 import { KeyboardAvoidingView } from "react-native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesome} from '@expo/vector-icons'
 
 interface User {
   _id: string;
   username: string;
   email: string;
+  role: string;
 }
 
 interface Integrante {
@@ -33,15 +32,31 @@ const EquipoDetalles: React.FC = () => {
   const teamData = route.params?.equipo;
   const [integrantes, setIntegrantes] = useState<User[]>([]);
   const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [filteredUser, setFilteredUser] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const roles = ["Miembro", "Lider"];
+  const [selectedRole, setSelectedRole] = useState<string>("Miembro");
 
-  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [allcamps, setAllcamps] = useState(true);
-  const [emailValid, setEmailValid] = useState(true);
   const [shouldLoad, setShouldLoad] = useState(false);
-  const [existingEmail, setExistingEmail] = useState(false);
   const [userAdded, setUserAdded] = useState(false);
+
+  const getUserRoleOnTeam = async (teamId:string, userId:string)  => {
+    try {
+      const response = await fetch(`http://10.0.2.2:3000/${teamId}/${userId}/roleOnTeam`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.role;
+      } else {
+        console.error("Error al obtener el rol del usuario en el equipo");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error de red", error);
+      return null;
+    }
+  };
+  
 
   useFocusEffect(
     React.useCallback(() => {
@@ -53,56 +68,70 @@ const EquipoDetalles: React.FC = () => {
       try {
         const response = await fetch("http://localhost:3000/users/all");
         if (response.ok) {
-          const data = await response.json();
-          setAllUsers(data);
+          const allUsersData = await response.json();
+  
+          const usersNotOnTeam = await Promise.all(
+            allUsersData.map(async (user) => {
+              const response = await fetch(
+                `http://10.0.2.2:3000/equipo/${teamData._id}/${user.email}/userOnTeam`
+              );
+              const isUserOnTeam = await response.json();
+              return isUserOnTeam ? null : user;
+            })
+          );
+  
+          const filteredUsers = usersNotOnTeam.filter(Boolean);
+  
+          setAllUsers(filteredUsers);
         }
       } catch (error) {
         console.error("Error al obtener la lista de usuarios", error);
       }
     };
-
+  
     fetchAllUsers();
-  }, []);
+  }, [teamData._id]);
+  
+
 
   useEffect(() => {
     const fetchUsernames = async () => {
       const usersData = await Promise.all(
         teamData.integrantes.map(async (integrante: Integrante) => {
           const userId = integrante.user;
-          const response = await fetch(
-            `http://localhost:3000/users/findById/${userId}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const userData: User = await response.json();
-          return userData;
+  
+          // Obtener el rol del usuario en el equipo
+          const responseRole = await fetch(`http://10.0.2.2:3000/${teamData._id}/${userId}/roleOnTeam`);
+          const role = responseRole.ok ? await responseRole.text() : "Miembro";
+  
+          // Obtener los detalles del usuario
+          const responseUser = await fetch(`http://localhost:3000/users/findById/${userId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+  
+          const userData: User = await responseUser.json();
+  
+          return {
+            ...userData,
+            role,
+          };
         })
       );
       setIntegrantes(usersData);
     };
-
+  
     fetchUsernames();
-  }, [teamData.integrantes]);
+  }, [teamData._id]);
+  
 
-  const isEmailValid = (email: string) => {
-    const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    return emailPattern.test(email);
-  };
 
   const handleNewMemberTeam = async () => {
     setUserAdded(false);
-    if (!email) {
-      setAllcamps(false);
-      return;
-    }
-    if (!isEmailValid(email)) {
-      setEmailValid(false);
-      return;
-    }
+    if(!selectedUser) return;
+    console.log(`Usuario seleccionado: ${selectedUser}`);
 
     setLoading(true);
 
@@ -114,8 +143,8 @@ const EquipoDetalles: React.FC = () => {
         },
         body: JSON.stringify({
           _idTeam: teamData._id,
-          _userEmail: email,
-          _role: "Miembro",
+          _userEmail: selectedUser,
+          _role: selectedRole,
         }),
       });
       if (response.ok) {
@@ -123,12 +152,7 @@ const EquipoDetalles: React.FC = () => {
         setUserAdded(true);
         setTimeout(() => {}, 2000);
         setLoading(false);
-      } else if (response.status === 409) {
-        const errorResponse = await response.json();
-        if (errorResponse.message) {
-          setExistingEmail(true);
-        }
-      }
+      } 
     } catch (error) {
       setUserAdded(false);
       console.error("Error de red", error);
@@ -177,7 +201,7 @@ const EquipoDetalles: React.FC = () => {
           <View>
             {integrantes.map((user, index) => (
               <Text key={index} style={{ color: "white", fontSize: 16 }}>
-                {user.username} - {user.email}
+                {user.email} [{user.role}]
               </Text>
             ))}
           </View>
@@ -207,11 +231,11 @@ const EquipoDetalles: React.FC = () => {
             borderRadius: 10,
             borderWidth: 1,
             borderColor: "#0DF5E3",
+            maxWidth: 300,
             width: 300,
             alignSelf: "center",
             marginTop: "5%",
           }}
-          inputStyles={{color:'white',fontSize:16}}
           placeholder="Seleccionar usuario"
           notFoundText="No se encuentra el usuario"
           dropdownStyles={{
@@ -222,18 +246,61 @@ const EquipoDetalles: React.FC = () => {
             width: 300,
             alignSelf: "center",
           }}
+          arrowicon={<FontAwesome name="chevron-down" size={20} color={'#0DF5E3'} />} 
           dropdownTextStyles={{color:'white',fontSize:16}}
-          closeicon={<FontAwesomeIcon icon={faXmarkCircle} color="white" size={20} />}
-          searchicon={<FontAwesomeIcon icon={faMagnifyingGlass} color="white" size={20} />}
+          closeicon={<FontAwesome name="user" size={20} color={'#0DF5E3'} />}
+          searchicon={<FontAwesome name="search" size={20} color={'#0DF5E3'} />} 
           searchPlaceholder="Buscar usuario"
+          searchPlaceholderTextColor={'white'}
+          inputStyles={{color:'white',fontSize:16, marginLeft: 10}}
+          
           setSelected={(user) => setSelectedUser(user)}
           data={allUsers.map((user) => ({
-            key: user._id,
+            key: user.email,
             value: `${user.username} - ${user.email}`,
           }))}
-          save="value"
+          save="key"
         />
+        {selectedUser && (
+          <SelectList
 
+            placeholder="Seleccionar rol"
+            notFoundText="No se encuentra el rol"
+            boxStyles={{
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: "#0DF5E3",
+              width: 300,
+              alignSelf: "center",
+              marginTop: "2%",
+            }}
+            search={false}
+            defaultOption={{key:'0',value:roles[0]}}
+            dropdownStyles={{
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: "#0DF5E3",
+              maxWidth: 300,
+              width: 300,
+              alignSelf: "center",
+            }}
+            arrowicon={<FontAwesome name="chevron-down" size={20} color={'#0DF5E3'} />} 
+            dropdownTextStyles={{color:'white',fontSize:16}}
+            closeicon={<FontAwesome name="user" size={20} color={'#0DF5E3'} />}
+            searchicon={<FontAwesome name="search" size={20} color={'#0DF5E3'} />} 
+            searchPlaceholder="Buscar rol"
+            searchPlaceholderTextColor={'white'}
+            inputStyles={{color:'white',fontSize:16, marginLeft: 10}}
+            
+            setSelected={(role) => setSelectedRole(role)}
+            data={roles.map((role) => ({
+              key: role,
+              value: role,
+            }))}
+            save="key"
+          />
+        )}
+        
         <Pressable
           style={{...smallButton.style,marginTop:10}}
           onPress={handleNewMemberTeam}

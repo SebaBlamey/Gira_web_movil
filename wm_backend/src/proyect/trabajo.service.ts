@@ -2,7 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { Trabajo } from './entities/trabajo.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { TrabajoDocument } from './entities/trabajo.entity';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { EquipoService } from 'src/team/equipo.service';
 import { CreateTrabajoDto } from './dto/trabajo.dto';
 import { EquipoModule } from 'src/team/equipo.module';
@@ -46,21 +46,19 @@ export class TrabajoService {
   
       if (equipos && equipos.length > 0) {
         console.log('El trabajo tiene equipos');
-        const alreadyInTrabajo = equipos.some((equipo) => equipo._id.equals(equipo._id));
+        const alreadyInTrabajo = equipos.some((equipo) => equipo.Equipo.equals(_idEquipo));
         if (alreadyInTrabajo) {
           console.log('El equipo ya está en el trabajo');
           return trabajo;
         }
       }
-  
+      let newId = new Types.ObjectId(_idEquipo);
       if (equipos) {
-        equipos.push(equipo);
+        equipos.push({ Equipo: newId });
       } else {
-        trabajo.equipos.push(equipo);
+        trabajo.equipos = [{ Equipo: newId }];
       }
-  
       await trabajo.save();
-  
       equipo.trabajo = trabajo;
       await equipo.save();
   
@@ -70,6 +68,7 @@ export class TrabajoService {
       throw new ConflictException(error.message);
     }
   }
+  
   
 
   async create(CreateTrabajoDto: CreateTrabajoDto): Promise<Trabajo> {
@@ -84,25 +83,27 @@ export class TrabajoService {
   
     if (existingProject) {
       console.log('El proyecto ya existe');
-      throw new Error('El proyecto ya existe');
+      throw new ConflictException('El proyecto ya existe');
     }
   
     const trabajo = new this.trabajoModel({ nombre, equipos: [] });
-    
-      if (equipos && equipos.length > 0) {
-        const equiposIds = equipos.map(async ({ equipoId }) => {
-          const equipo = await this.equipoService.findById(equipoId);
-          if (equipo) {
-            equipo.trabajo = trabajo;
-            await equipo.save();
-            trabajo.equipos.push(equipo);
-          }
-        });
+  
+    if (equipos && equipos.length > 0) {
+      const equiposIds = equipos.map(async ({ equipoId }) => {
+        const equipo = await this.equipoService.findById(equipoId);
+        if (equipo) {
+          equipo.trabajo = trabajo;
+          await equipo.save();
+          trabajo.equipos.push({ Equipo: equipo._id });
+        }
+      });
   
       await Promise.all(equiposIds);
     }
+    console.log('Trabajo creado');
     return trabajo.save();
   }
+  
 
 
   async delete(_id: string): Promise<boolean> {
@@ -117,8 +118,8 @@ export class TrabajoService {
       console.log('El trabajo tiene equipos');
   
       await Promise.all(
-        deletedTrabajo.equipos.map(async (equipoId) => {
-          const equipo = await this.equipoService.findById(equipoId._id);
+        deletedTrabajo.equipos.map(async (equipoObj) => {
+          const equipo = await this.equipoService.findById(equipoObj.Equipo.toString());
           if (equipo) {
             equipo.trabajo = null;
             await equipo.save();
@@ -131,7 +132,5 @@ export class TrabajoService {
   
     return deleted.deletedCount === 1;
   }
-  
-  
   
 }

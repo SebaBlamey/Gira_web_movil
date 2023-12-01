@@ -28,6 +28,51 @@ export class EquipoService {
     return await this.equipoModel.findOne({ nombre: nombre }).exec();
   }
 
+  async userOnTeam(_idTeam: string, _userEmail: string): Promise<boolean> {
+    const equipo = await this.equipoModel.findById(_idTeam);
+    if (!equipo) {
+      console.log('Equipo no encontrado');
+      throw new NotFoundException('Equipo no encontrado');
+    }
+    const user = await this.userService.findByEmail(_userEmail);
+    if (!user) {
+      console.log('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    const integrantes = equipo.integrantes;
+    if (integrantes && integrantes.length > 0) {
+      console.log('El equipo tiene integrantes');
+      const alreadyInTeam = integrantes.some((integrante) => integrante.user.equals(user._id));
+      if (alreadyInTeam) {
+        console.log('El usuario está en el equipo');
+        return true;
+      }
+    }
+    return false;
+  }
+
+  async roleOnTeam(_idTeam: string, _userEmail: string): Promise<string> {
+    const equipo = await this.equipoModel.findById(_idTeam);
+    if (!equipo) {
+      console.log('Equipo no encontrado');
+      throw new NotFoundException('Equipo no encontrado');
+    }
+    const user = await this.userService.findByEmail(_userEmail);
+    if (!user) {
+      console.log('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    const integrantes = equipo.integrantes;
+    if (integrantes && integrantes.length > 0) {
+      const alreadyInTeam = integrantes.find((integrante) => integrante.user.equals(user._id));
+      if (alreadyInTeam) {
+        console.log('El usuario está en el equipo');
+        return alreadyInTeam.role;
+      }
+    }
+    return 'No está en el equipo';
+  }
+
   async join(_idTeam: string, _userEmail: string, _role: string) {
     try{
       const team = await this.equipoModel.findById(_idTeam);

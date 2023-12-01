@@ -31,8 +31,8 @@ export class TrabajoController {
     return this.trabajoService.create(CreateTrabajoDto);
   }
 
-  @Post('/delete')
-  delete(@Body() _id: string) {
+  @Post(':id/delete')
+  delete(@Param('id') _id: string) {
     return this.trabajoService.delete(_id);
   }
 }

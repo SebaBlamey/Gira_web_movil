@@ -10,7 +10,7 @@ interface Equipo {
   _id: string;
   nombre: string;
   trabajo: string;
-  integrantes: string[]; // Corregido: "intengrantes" a "integrantes"
+  integrantes: string[]; 
 }
 
 const TeamPage: React.FC = () => {
@@ -18,7 +18,6 @@ const TeamPage: React.FC = () => {
   const userData = route.params?.userData;
   const [teams, setTeams] = useState<Equipo[]>([]);
   const [loading, setLoading] = useState(true);
-  const [teamstr, setTeamsStr] = useState<string>("");
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -38,7 +37,6 @@ const TeamPage: React.FC = () => {
       .then((response) => response.json())
       .then((data) => {
         setTeams(data);
-        setTeamsStr(JSON.stringify(data));
         setLoading(false);
       })
       .catch((error) => {
