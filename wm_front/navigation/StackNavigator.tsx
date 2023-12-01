@@ -12,10 +12,11 @@ import RecoverPassToken from "../src/screens/Recover/RecoverPassToken";
 import ProyectoPage from "../src/screens/UserScreens/ProyectPageScreen";
 import CreateTeamPage from "../src/screens/UserScreens/CreateTeamPage";
 import EquipoDetalles from "../src/screens/UserScreens/EquipoDetalles";
-import TasksPage from "../src/screens/UserScreens/TasksPage";
-import MyTasks from "../src/screens/UserScreens/MyTasks";
+import TasksPage from "../src/screens/Task/TasksPage";
+import MyTasks from "../src/screens/Task/MyTasks";
 import CreateProjectPage from "../src/screens/UserScreens/CreateProjectPage";
 import ProjectDetalles from "../src/screens/UserScreens/ProjectDetalles";
+import EditTask from "../src/screens/Task/EditTask";
 const Stack = createStackNavigator();
 
 const StackNavigator: React.FC = () => {
@@ -43,6 +44,13 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
+        options={{
+          headerShown: true,
+        }}
+      />
+       <Stack.Screen
+        name="EditTask"
+        component={EditTask}
         options={{
           headerShown: true,
         }}

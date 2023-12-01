@@ -53,4 +53,25 @@ export class TaskService {
     const task = await this.taskModel.findByIdAndUpdate(id, { $push: { comentarios: comentario } }, { new: true });
     return task;
   }  
+
+  async getTasksByUserId(userId: string): Promise<Task[]> {
+    return this.taskModel.find({ userID: userId.toString() });
+  }
+
+  async getTaskById(id: string): Promise<Task> {
+    const task = await this.taskModel.findById(id);
+    if (!task) {
+      throw new NotFoundException('La tarea no fue encontrada');
+    }
+    return task;
+  }
+  
+  async actualizarTarea(id: string, tareaDto: TasksDto): Promise<Task> {
+    const tareaActualizada = await this.taskModel.findByIdAndUpdate(id, tareaDto, { new: true });
+    if (!tareaActualizada) {
+      throw new NotFoundException('La tarea no fue encontrada');
+    }
+    return tareaActualizada;
+  }
+  
 }

@@ -1,6 +1,7 @@
-import { Controller, Post, Body, Patch, Param } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Get } from '@nestjs/common';
 import { TaskService } from './tasks.service';
 import { TasksDto } from './dto/tasks.dto';
+import { Task } from './entities/tasks.entity';
 
 @Controller('tasks')
 export class TaskController {
@@ -25,6 +26,19 @@ export class TaskController {
     return this.tareaService.agregarComentarioTarea(id, comentario);
   }
 
+  @Get('user/:userId/tasks')
+  async getTasksByUserId(@Param('userId') userId: string) {
+    return this.tareaService.getTasksByUserId(userId);
+  }
 
+  @Get(':id') 
+  async getTaskById(@Param('id') id: string): Promise<Task> {
+    return this.tareaService.getTaskById(id);
+  }
+
+  @Patch(':id')
+  async actualizarTarea(@Param('id') id: string, @Body() tareaDto: TasksDto): Promise<Task> {
+    return this.tareaService.actualizarTarea(id, tareaDto);
+  }
   
 }

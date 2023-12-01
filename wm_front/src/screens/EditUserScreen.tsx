@@ -34,7 +34,7 @@ const EditUserScreen: React.FC = () => {
     try {
       const response = await fetch(
         
-        `http://10.0.2.2:3000/users/${userData.user._id}`,
+        `http://localhost:3000/users/${userData.user._id}`,
         {
           method: "PATCH",
           headers: {
@@ -57,7 +57,7 @@ const EditUserScreen: React.FC = () => {
     
     navigation.navigate("UserScreen", { userData });
   };
-
+  
   return (
     <View style={styles.container}>
         <Image

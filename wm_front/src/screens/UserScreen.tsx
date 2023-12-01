@@ -78,10 +78,10 @@ const UserScreen: React.FC = () => {
         <Pressable onPress={navigateToTasksPage} style={defaultButton.style}>
           <Text style={defaultButton.text}>Crear Tareas</Text>
         </Pressable>
-        <Pressable onPress={navigateToTasksPage} style={defaultButton.style}>
+        <Pressable onPress={navigateToMyTasks} style={defaultButton.style}>
           <Text style={defaultButton.text}>Ver Mis Tareas</Text>
         </Pressable>
-        <Pressable style={defaultButton.style} onPress={navigateToMyTasks}>
+        <Pressable style={defaultButton.style} onPress={navigateToEditUser}>
           <Text style={defaultButton.text}>Editar perfil</Text>
         </Pressable>
       </View>
