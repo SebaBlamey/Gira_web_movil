@@ -34,7 +34,7 @@ const EditUserScreen: React.FC = () => {
     try {
       const response = await fetch(
         
-        `http://localhost:3000/users/${userData.user._id}`,
+        `http://10.0.2.2:3000/users/${userData.user._id}`,
         {
           method: "PATCH",
           headers: {
