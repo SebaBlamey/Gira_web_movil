@@ -55,6 +55,7 @@ export class TaskService {
   }  
 
   async getTasksByUserId(userId: string): Promise<Task[]> {
+    console.log(`Buscando tareas del usuario con id: ${userId}`)
     return this.taskModel.find({ userID: userId.toString() });
   }
 

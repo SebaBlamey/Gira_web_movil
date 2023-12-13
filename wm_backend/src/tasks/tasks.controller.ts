@@ -28,6 +28,7 @@ export class TaskController {
 
   @Get('user/:userId/tasks')
   async getTasksByUserId(@Param('userId') userId: string) {
+    console.log(`Buscando tareas del usuario con id: ${userId}`)
     return this.tareaService.getTasksByUserId(userId);
   }
 

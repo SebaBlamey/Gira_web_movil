@@ -31,7 +31,7 @@ const ProyectoPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetch('http://localhost:3000/trabajo/findAll')
+    fetch('http://10.0.2.2:3000/trabajo/findAll')
     .then((response) => response.json())
     .then((data) => {
       setProjects(data);
