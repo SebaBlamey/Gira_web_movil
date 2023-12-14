@@ -112,7 +112,7 @@ const EquipoDetalles: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://10.0.2.2:3000/equipo/join", {
+      const response = await fetch("http://localhost:3000/equipo/join", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

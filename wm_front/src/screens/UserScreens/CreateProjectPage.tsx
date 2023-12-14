@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Image,
@@ -16,7 +16,7 @@ import {
 } from "@react-navigation/native";
 import { prettyContainer } from "../components/container";
 import header from "../components/header";
-import { defaultButton, equipoButton, smallButton } from "../components/button";
+import { defaultButton, smallButton } from "../components/button";
 import normalInput from "../components/input";
 import { SelectList } from "react-native-dropdown-select-list";
 import { FontAwesome } from "@expo/vector-icons";
@@ -34,13 +34,14 @@ const CreateProjectPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const route = useRoute();
+  const userData = route.params?.userData;
   const [allcamps, setAllcamps] = useState(true);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [existingProject, setExistingProject] = useState(false);
   const [ProjectAdded, setProjectAdded] = useState(false);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setLoading(true);
     }, [])
   );
@@ -53,8 +54,8 @@ const CreateProjectPage: React.FC = () => {
     }
     setLoading(true);
 
-    try{
-      const response = await fetch("http://10.0.2.2:3000/trabajo/create", {
+    try {
+      const response = await fetch("http://localhost:3000/trabajo/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,16 +66,27 @@ const CreateProjectPage: React.FC = () => {
           equipo: selectedTeam?._id,
         }),
       });
-    }
-    catch(error){
+
+      if (response.ok) {
+        const responseData = await response.json(); // Parsea la respuesta como JSON
+        console.log(responseData._id)
+        setProjectAdded(true);
+        
+        navigation.navigate("ProyectPage", {userData});
+      } else {
+        console.log("Error al crear el proyecto");
+      }
+    } catch (error) {
       console.error("Error al crear el proyecto", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     const fetchAllTeams = async () => {
       try {
-        const response = await fetch("http://10.0.2.2:3000/equipo/findAll");
+        const response = await fetch("http://localhost:3000/equipo/findAll");
         if (response.ok) {
           const allTeamsData = await response.json();
           setAllTeams(allTeamsData);
@@ -106,7 +118,7 @@ const CreateProjectPage: React.FC = () => {
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text style={header.style}>Crear Proyecto</Text>
           <Text style={header.subheader}>Cree un proyecto</Text>
-          {projectName == null  ? (
+          {projectName == null ? (
             <Text style={{ color: "red" }}>El equipo no es valido</Text>
           ) : null}
           <TextInput
@@ -173,7 +185,7 @@ const CreateProjectPage: React.FC = () => {
             save="key"
           />
           <Pressable
-            style={{ ...smallButton.style, marginTop: 10 , alignContent: "center"}}
+            style={{ ...smallButton.style, marginTop: 10, alignContent: "center" }}
             onPress={handleNewProject}
             disabled={!loading}
           >
@@ -193,4 +205,5 @@ const CreateProjectPage: React.FC = () => {
     </KeyboardAvoidingView>
   );
 };
+
 export default CreateProjectPage;

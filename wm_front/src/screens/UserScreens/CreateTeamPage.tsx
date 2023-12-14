@@ -18,6 +18,7 @@ import header from "../components/header";
 import { defaultButton, equipoButton, smallButton } from "../components/button";
 import normalInput from "../components/input";
 
+
 const CreateTeamPage: React.FC = () => {
   const [teamName, setTeamName] = useState("");
   const [roleName, setRole] = useState("");
@@ -28,7 +29,6 @@ const CreateTeamPage: React.FC = () => {
   const [allcamps, setAllcamps] = useState(true);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [existingTeam, setExistingTeam] = useState(false)
-
 
   useFocusEffect(
     React.useCallback(() => {
@@ -45,7 +45,7 @@ const CreateTeamPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://10.0.2.2:3000/equipo/create", {
+      const response = await fetch("http://localhost:3000/equipo/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
