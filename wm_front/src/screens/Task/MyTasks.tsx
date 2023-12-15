@@ -39,13 +39,9 @@ const MyTasks: React.FC = () => {
   const fetchUserTasks = async () => {
     try {
       console.log(`buscando al id ${userData.user._id}`);
-<<<<<<< HEAD
+
       const response = await fetch(`http://localhost:3000/tasks/user/${userData.user._id}/tasks`);
-=======
-      const response = await fetch(
-        `http://10.0.2.2:3000/tasks/user/${userData.user._id}/tasks`
-      );
->>>>>>> cdda50e89549e9faf68b34ec4de347500504148c
+
       if (response.ok) {
         const data = await response.json();
         setUserTasks(data);
@@ -57,27 +53,6 @@ const MyTasks: React.FC = () => {
       console.error("Error al obtener las tareas del usuario:", error);
     }
   };
-<<<<<<< HEAD
-=======
-  useEffect(() => {
-    const fetchUserTasks = async () => {
-      try {
-        console.log(`buscando al id ${userData.user._id}`)
-        const response = await fetch(
-          `http://10.0.2.2:3000/tasks/user/${userData.user._id}/tasks`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setUserTasks(data);
-          console.log(data)
-        } else {
-          throw new Error("Error al obtener las tareas del usuario");
-        }
-      } catch (error) {
-        console.error("Error al obtener las tareas del usuario:", error);
-      }
-    };
->>>>>>> cdda50e89549e9faf68b34ec4de347500504148c
 
   useEffect(() => {
     fetchUserTasks();
@@ -92,7 +67,6 @@ const MyTasks: React.FC = () => {
 
   return (
     <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
-<<<<<<< HEAD
       <ScrollView>
         <View style={{ ...prettyContainer.container, flex: 1, justifyContent: 'flex-start' }}>
           <View style={prettyContainer.headerContainer}>
@@ -105,21 +79,6 @@ const MyTasks: React.FC = () => {
             </Text>
           )}
           <TextInput
-=======
-    <ScrollView style={{backgroundColor:"#05161A"}}>
-    <View style={{ ...prettyContainer.container, flex:1,
-    justifyContent: 'flex-start' }}>
-      <View style={prettyContainer.headerContainer}>
-        <Image source={require("../../../assets/task-logo.png")} style={{ ...styles.image }} />
-      </View>
-      <Text style={{ fontSize:20, color: "#fff", marginTop:"10%"}}>Tus tareas:</Text>
-      {userTasks.length === 0 && (
-        <Text style={{ fontSize: 15, color: "#fff", marginTop: "10%" }}>
-          No tienes tareas asignadas
-        </Text>
-      )}
-      <TextInput
->>>>>>> cdda50e89549e9faf68b34ec4de347500504148c
             style={{ ...normalInput.input, width: 300 }}
             placeholder="Buscar"
             placeholderTextColor={"#294D61"}
