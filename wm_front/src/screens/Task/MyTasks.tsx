@@ -39,9 +39,7 @@ const MyTasks: React.FC = () => {
   const fetchUserTasks = async () => {
     try {
       console.log(`buscando al id ${userData.user._id}`);
-
-      const response = await fetch(`http://localhost:3000/tasks/user/${userData.user._id}/tasks`);
-
+      const response = await fetch(`http://10.0.2.2:3000/tasks/user/${userData.user._id}/tasks`);
       if (response.ok) {
         const data = await response.json();
         setUserTasks(data);

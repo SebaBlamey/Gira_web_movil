@@ -27,6 +27,10 @@ const ProjectDetalles: React.FC = () => {
   const [ProjectAdded, setProjectAdded] = useState(false);
   const [teamAdded, setTeamAdded] = useState(false);
 
+  useEffect(() => {
+  setExistingProject(false);
+}, [selectedTeam]);
+
   useFocusEffect(
     React.useCallback(() => {
       setLoading(true);
@@ -51,7 +55,9 @@ const ProjectDetalles: React.FC = () => {
       if (response.ok) {
         setTeamAdded(true);
         setLoading(false);
-      } else {
+        console.log("ok");
+      } else if (response.status === 409) {
+        setExistingProject(true);
         console.log("error");
       }
     } catch (error) {
@@ -72,7 +78,6 @@ const ProjectDetalles: React.FC = () => {
             try {
               const responseText = await response.text();
   
-              // Verificar si la respuesta tiene contenido antes de analizar
               if (responseText.trim() !== "") {
                 const teamData = JSON.parse(responseText);
                 console.log(`se encontro al equipo ${team.Equipo}`);
@@ -173,7 +178,7 @@ const ProjectDetalles: React.FC = () => {
 ) : (
   equipos.map((equipo, index) => (
     <Text key={index} style={{ color: "white", fontSize: 16 }}>
-      {equipo && equipo.nombre ? equipo.nombre : 'Nombre no disponible'}
+      {equipo && equipo.nombre ? equipo.nombre : ''}
     </Text>
   ))
 )}
@@ -228,6 +233,11 @@ const ProjectDetalles: React.FC = () => {
             <Text style={smallButton.text}>{"Asignar"}</Text>
           )}
         </Pressable>
+        {existingProject ? (
+          <Text style={{ color: "red" }}>
+            {"El equipo ya está asignado al proyecto"}
+          </Text>
+        ) : null}
         {teamAdded ? (
           <Text style={{ color: "green" }}>
             {"Equipo asignado exitosamente"}

@@ -147,7 +147,7 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
     @Body() changeParams: { newUsername:string},
   ) {
     console.log(changeParams);
-    const user = await this.userService.findById2(id);
+    const user = await this.userService.findByIdd(id);
     
     user.username = changeParams.newUsername;
     await user.save();

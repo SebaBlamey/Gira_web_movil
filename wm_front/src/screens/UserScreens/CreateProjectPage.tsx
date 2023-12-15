@@ -192,7 +192,7 @@ const CreateProjectPage: React.FC = () => {
                 <FontAwesome name="search" size={20} color={"#0DF5E3"} />
               }
               search={false}
-              inputStyles={{ color: "white", fontSize: 16, marginLeft: 10 }}
+              inputStyles={{ coalor: "white", fontSize: 16, marginLeft: 10 }}
               setSelected={(team) => setSelectedTeam(team)}
               data={allTeams.map((team) => ({
                 key: `${team._id}`,
