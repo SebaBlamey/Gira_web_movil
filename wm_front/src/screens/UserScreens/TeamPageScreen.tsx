@@ -22,17 +22,17 @@ const TeamPage: React.FC = () => {
   const fetchTeams = useCallback(async () => {
     const userId = userData.user._id;
     console.log(`userID: ${userId}`);
-
     try {
       const response = await fetch(`http://localhost:3000/equipo/${userId}/findTeamsFromUserId`);
       const data = await response.json();
       setTeams(data);
-      setLoading(false);
     } catch (error) {
       console.error("Error al cargar los equipos:", error);
-      setLoading(false);
+    } finally {
+      setLoading(false); // <- Mover esto aquí para asegurar que se establezca en false
     }
   }, [userData.user._id]);
+  
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {

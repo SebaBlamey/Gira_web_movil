@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -168,59 +169,85 @@ export class EquipoService {
   }
 
   async deleteUserFromTeam(_idTeam: string, _idUser: string): Promise<Equipo> {
-    const equipo = await this.equipoModel.findById(_idTeam);
-    if (!equipo) {
-      console.log('Equipo no encontrado');
-      throw new NotFoundException('Equipo no encontrado');
-    }
-    const user = await this.userService.findByIdd(_idUser);
-    if (!user) {
-      console.log('Usuario no encontrado');
-      throw new NotFoundException('Usuario no encontrado');
-    }
-    const integrantes = equipo.integrantes;
-    if (integrantes && integrantes.length > 0) {
-      console.log('El equipo tiene integrantes');
+    try {
+      const equipo = await this.equipoModel.findById(_idTeam);
+  
+      if (!equipo) {
+        throw new NotFoundException('Equipo no encontrado');
+      }
+  
+      const user = await this.userService.findByIdd(_idUser);
+  
+      if (!user) {
+        throw new NotFoundException('Usuario no encontrado');
+      }
+  
+      const integrantes = equipo.integrantes;
+  
+      if (!integrantes || integrantes.length === 0) {
+        console.log('El equipo no tiene integrantes');
+        return equipo;
+      }
+  
       const alreadyInTeam = integrantes.some((integrante) =>
         integrante.user.equals(user._id),
       );
+  
       if (alreadyInTeam) {
         console.log('El usuario está en el equipo');
         equipo.integrantes = integrantes.filter(
           (integrante) => !integrante.user.equals(user._id),
         );
+  
         await equipo.save();
+  
         user.equipos = user.equipos.filter(
           (equipo) => !equipo.equipoId.equals(_idTeam),
         );
+  
         await user.save();
+  
+        console.log('Usuario eliminado del equipo');
+  
         return equipo;
       }
+  
+      console.log('El usuario no está en el equipo');
+  
+      return equipo;
+    } catch (error) {
+      console.error('Error al eliminar usuario del equipo:', error);
+      throw new InternalServerErrorException('Error al eliminar usuario del equipo');
     }
-    console.log('El usuario no está en el equipo');
-    return equipo;
   }
-
+  
   async findEquipoFromUser(userId: string): Promise<Equipo[]> {
-    console.log(`Buscando usuario con ID: ${userId}`);
-    const user = await this.userService.findByIdd(userId);
-
-    if (!user) {
-      console.log('Usuario no encontrado');
-      throw new NotFoundException('Usuario no encontrado');
+    try {
+      console.log(`Buscando usuario con ID: ${userId}`);
+      
+      const user = await this.userService.findByIdd(userId);
+  
+      if (!user) {
+        console.log('Usuario no encontrado');
+        throw new NotFoundException('Usuario no encontrado');
+      }
+  
+      console.log('Usuario encontrado');
+      const equipos = await this.equipoModel.find({ 'integrantes.user': userId });
+  
+      if (equipos.length === 0) {
+        console.log('El usuario no está en ningún equipo');
+      } else {
+        console.log('Equipos del usuario:', equipos);
+      }
+  
+      return equipos;
+    } catch (error) {
+      console.error('Error al buscar equipos del usuario:', error);
+      throw new InternalServerErrorException('Error al buscar equipos del usuario');
     }
-
-    console.log('Usuario encontrado');
-    const equipos = await this.equipoModel.find({ 'integrantes.user': userId });
-
-    if (equipos.length === 0) {
-      console.log('No está en un equipo');
-    } else {
-      console.log('Equipos del usuario:', equipos);
-    }
-
-    return equipos;
   }
+  
 
   async findEquipoFromTrabajo(trabajoId: string): Promise<Equipo[]> {
     console.log(`Buscando trabajo con ID: ${trabajoId}`);

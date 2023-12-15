@@ -56,16 +56,14 @@ const EquipoDetalles: React.FC = () => {
   const handleDeleteTeam = async (userId: string) => {
     try {
       const response = await fetch(`http://localhost:3000/equipo/delete/${teamData._id}/${userId}`, {
-
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
+
       if (response.ok) {
-        setTimeout(() => {
-          navigation.navigate("TeamPage", { userData });
-        }, 1000);
+        navigation.navigate("TeamPage", { userData });
       } else {
         const responseData = await response.json();
         if (response.status === 404 && responseData.message === 'Equipo no encontrado') {
@@ -75,9 +73,11 @@ const EquipoDetalles: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error("Error de red", error);
+      // Maneja errores de red y otros errores
+      console.error("Error al eliminar el equipo:", error);
     }
-  }
+  };
+  
   
 
     const fetchAllUsers = useCallback(async () => {
@@ -180,15 +180,17 @@ const EquipoDetalles: React.FC = () => {
         },
       });
       if (response.ok) {
+        console.log("Si llegue aca");
         fetchUsernames();
         fetchAllUsers();
         fetchUserAdmin();
+        
       }
     } catch (error) {
       console.error("Error de red", error);
     }
+    navigation.navigate("UserScreen",{userData});
   }
-      
 
   const handleNewMemberTeam = async () => {
     setUserAdded(false);
