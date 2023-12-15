@@ -81,8 +81,7 @@ export class TrabajoService {
         console.log('El trabajo tiene equipos');
         const alreadyInTrabajo = equipos.some((equipo) => equipo.Equipo.equals(_idEquipo));
         if (alreadyInTrabajo) {
-          console.log('El equipo ya está en el trabajo');
-          return trabajo;
+          throw new ConflictException('El equipo ya está en el trabajo');
         }
       }
       let newId = new Types.ObjectId(_idEquipo);
