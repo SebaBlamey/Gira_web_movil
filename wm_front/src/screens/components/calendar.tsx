@@ -104,4 +104,4 @@ export const buttonLabel= {
     color: 'white',
     fontSize: 16,
   };
-    
+

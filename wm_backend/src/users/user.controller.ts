@@ -186,6 +186,10 @@ async recoverPass(@Body() recoverData: { email: string }): Promise<{ user }> {
     return this.userService.findUsersByEquipoId(equipoId);
   }
 
+  @Get('/findByName')
+  findByName(@Body() username: string) {
+    return this.userService.findByName(username);
+  }
 //usar get profile
 }
  

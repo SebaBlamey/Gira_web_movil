@@ -13,10 +13,10 @@ export class Task extends Document {
   nombre: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Trabajo', default: null })
-  proyectID: Trabajo;
+  nombreProyecto: Trabajo;
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
-  userID?: User;
+  emailUser?: User;
 
   @Prop()
   observacion?: string;

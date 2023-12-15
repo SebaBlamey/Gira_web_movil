@@ -22,11 +22,11 @@ export class TasksDto {
 
   @IsString()
   @IsNotEmpty()
-  proyectID: Trabajo;
+  nombreProyecto: Trabajo;
 
   @IsString()
   @IsOptional()
-  userID?: User;
+  emailUser?: User;
 
   @IsString()
   @IsOptional()

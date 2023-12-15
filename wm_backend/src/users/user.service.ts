@@ -131,4 +131,8 @@ export class UserService {
   
     return equipos;
   }
+
+  async findByName(username: string): Promise<User | null> {
+    return await this.userModel.findOne({ nombre: username }).exec();
+  }
 }
