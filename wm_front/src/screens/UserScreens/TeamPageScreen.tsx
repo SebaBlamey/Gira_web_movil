@@ -24,7 +24,7 @@ const TeamPage: React.FC = () => {
     console.log(`userID: ${userId}`);
 
     try {
-      const response = await fetch(`http://localhost:3000/equipo/${userId}/findTeamsFromUserId`);
+      const response = await fetch(`http://10.0.2.2:3000/equipo/${userId}/findTeamsFromUserId`);
       const data = await response.json();
       setTeams(data);
       setLoading(false);

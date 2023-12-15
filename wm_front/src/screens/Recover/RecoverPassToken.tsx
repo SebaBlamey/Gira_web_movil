@@ -88,7 +88,7 @@ const RecoverPassToken: React.FC = () => {
     };
     setRequesting(true);
     try {
-      const response = await fetch(`http://localhost:3000/users/changePass/${userData.user._id}`, {
+      const response = await fetch(`http://10.0.2.2:3000/users/changePass/${userData.user._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

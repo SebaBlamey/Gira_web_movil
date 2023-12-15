@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Image, Text, Pressable, ActivityIndicator } from "react-native";
+import { View, Image, Text, Pressable, ActivityIndicator, ScrollView } from "react-native";
 import styles from "../components/styles";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { prettyContainer } from "../components/container";
@@ -36,9 +36,8 @@ const ProjectDetalles: React.FC = () => {
   const handleNewProject = async () => {
     setProjectAdded(false);
     setLoading(true);
-
     try {
-      const response = await fetch("http://localhost:3000/trabajo/join", {
+      const response = await fetch("http://10.0.2.2:3000/trabajo/join", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +63,7 @@ const ProjectDetalles: React.FC = () => {
       const teamsData = await Promise.all(
         projectData.equipos.map(async (teamId) => {
           const response = await fetch(
-            `http://localhost:3000/equipo/findById/${teamId.Equipo}`,
+            `http://10.0.2.2:3000/equipo/findById/${teamId.Equipo}`,
           );
           if(!response.ok){
             console.log(`error al buscar ${teamId.Equipo}\n${response.status}`);
@@ -76,7 +75,6 @@ const ProjectDetalles: React.FC = () => {
       );
       if(teamsData != null){
         setEquipos(teamsData);
-        console.log(teamsData);
     }
     };
     fetchTeams();
@@ -85,7 +83,7 @@ const ProjectDetalles: React.FC = () => {
   useEffect(() => {
     const fetchAllTeams = async () => {
       try {
-        const response = await fetch("http://localhost:3000/equipo/findAll");
+        const response = await fetch("http://10.0.2.2:3000/equipo/findAll");
         if (response.ok) {
           const allTeamsData = await response.json();
           setAllTeams(allTeamsData);
@@ -104,6 +102,7 @@ const ProjectDetalles: React.FC = () => {
 
   return (
     <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
+      <ScrollView style={{ backgroundColor: "#05161A" }}>
       <View
         style={{
           ...prettyContainer.container,
@@ -219,6 +218,7 @@ const ProjectDetalles: React.FC = () => {
           </Text>
         ) : null}
       </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
