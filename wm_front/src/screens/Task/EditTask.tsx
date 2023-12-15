@@ -29,7 +29,7 @@ const EditTask: React.FC<EditTaskProps> = ({ route,navigation }) => {
   useEffect(() => {
     const fetchTaskDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/tasks/${id}`);
+        const response = await fetch(`http://10.0.2.2:3000/tasks/${id}`);
         if (response.ok) {
           const data = await response.json();
           setTask(data);
@@ -53,7 +53,7 @@ const EditTask: React.FC<EditTaskProps> = ({ route,navigation }) => {
 
   const handleUpdateTask = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/tasks/${id}`, {
+      const response = await fetch(`http://10.0.2.2:3000/tasks/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ const EditTask: React.FC<EditTaskProps> = ({ route,navigation }) => {
 
   return (
     <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
-      <ScrollView>
+      <ScrollView style={{backgroundColor:"#05161A"}}>
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
   <View style={{ backgroundColor: '#f4f4f4', padding: 20, borderRadius: 10, width: '80%' }}>
     <Text style={{ fontSize: 24, textAlign: 'center', marginBottom: 20, color: '#333', fontWeight: 'bold' }}>

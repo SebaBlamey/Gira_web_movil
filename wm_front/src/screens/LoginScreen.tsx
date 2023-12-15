@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -31,6 +31,7 @@ const LoginScreen: React.FC = () => {
       setLoading(true);
     }, [])
   );
+  
   const isEmailValid = (email: string) => {
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     return emailPattern.test(email);
@@ -56,7 +57,7 @@ const LoginScreen: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/users/login", {
+      const response = await fetch("http://10.0.2.2:3000/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,10 +68,10 @@ const LoginScreen: React.FC = () => {
         }),
       });
       if(response){
-        setLoading(false);
       }
       if (response.ok) {
         const data = await response.json();
+        setLoading(false);
         console.log(data);
         setTimeout(() => {
           navigation.navigate("UserScreen", { userData: data });
@@ -114,6 +115,7 @@ const LoginScreen: React.FC = () => {
         onChangeText={(text) => {
           setPassword(text);
           setAllcamps(true);
+          setExistingUser(false);
         }}
       />
       <Text style={{ color: "red" }}>
@@ -121,6 +123,7 @@ const LoginScreen: React.FC = () => {
       </Text>
       <Text style={{ color: "red" }}>
         {!existingUser ? "" : "El correo o la contrasena son incorrectos."}
+
       </Text>
       <Pressable
         style={smallButton.style}

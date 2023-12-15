@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Image, Text, ActivityIndicator, Pressable } from "react-native";
+import { View, Image, Text, ActivityIndicator, Pressable, ScrollView } from "react-native";
 import styles from "../components/styles";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { container, prettyContainer } from "../components/container";
@@ -22,7 +22,7 @@ const ProyectoPage: React.FC = () => {
 
   const fetchProjects = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:3000/trabajo/findAll');
+      const response = await fetch('http://10.0.2.2:3000/trabajo/findAll');
       const data = await response.json();
       setProjects(data);
       setLoading(false);
@@ -50,6 +50,7 @@ const ProyectoPage: React.FC = () => {
   }, [navigation, fetchProjects]);
 
   return (
+    <ScrollView style={{ backgroundColor: "#05161A" }}>
     <View
       style={{
         ...prettyContainer.container,
@@ -87,6 +88,7 @@ const ProyectoPage: React.FC = () => {
         </Pressable>
       </View>
     </View>
+    </ScrollView>
   );
 };
 

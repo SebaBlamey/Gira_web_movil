@@ -111,28 +111,25 @@ export class TrabajoService {
       throw new Error('El proyecto debe tener un nombre');
     }
   
-    const existingProject = await this.trabajoModel.findOne({ nombre: nombre });
+    const existingProject = await this.trabajoModel.findOne({ nombre });
   
     if (existingProject) {
       console.log('El proyecto ya existe');
-      throw new ConflictException('El proyecto ya existe');
+      throw new ConflictException();
     }
 
-  
-    const trabajo = new this.trabajoModel({ nombre,descripcion,creador, equipos: [] });
-  
+    console.log(`Equipos: ${equipos}`)
+    const trabajo = new this.trabajoModel({ nombre,descripcion,creador});
+    
     if (equipos && equipos.length > 0) {
-      const equiposIds = equipos.map(async ({ equipoId }) => {
-        const equipo = await this.equipoService.findById(equipoId);
-        if (equipo) {
-          equipo.trabajo = trabajo;
-          await equipo.save();
-          trabajo.equipos.push({ Equipo: equipo._id });
-        }
+      const equiposArray = equipos.map(({ equipoId }) => {
+        return {
+          Equipo: new Types.ObjectId(equipoId),
+        };
       });
-  
-      await Promise.all(equiposIds);
+      trabajo.equipos = equiposArray;
     }
+    
     console.log('Trabajo creado');
     return trabajo.save();
   }

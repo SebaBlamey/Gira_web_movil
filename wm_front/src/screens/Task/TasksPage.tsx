@@ -89,7 +89,7 @@ const TasksPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/tasks/create", {
+      const response = await fetch("http://10.0.2.2:3000/tasks/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -133,7 +133,7 @@ const TasksPage: React.FC = () => {
 
   return (
     <KeyboardAvoidingView behavior="height" enabled style={{ flex: 1 }}>
-      <ScrollView>
+      <ScrollView style={{backgroundColor:"#05161A"}}>
     <View style={{...prettyContainer.container, flex:1}}>
       <View style={{...prettyContainer.headerContainer}}>
         <Image
