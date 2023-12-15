@@ -52,7 +52,7 @@ const EditTask: React.FC<EditTaskProps> = ({ route }) => {
 
   const handleUpdateTask = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/tasks/${id}`, {
+      const response = await fetch(`http://localhost:3000/tasks/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

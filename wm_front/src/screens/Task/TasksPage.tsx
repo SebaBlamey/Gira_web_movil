@@ -25,8 +25,8 @@ import { format } from 'date-fns';
 
 const TasksPage: React.FC = () => {
   const [taskName, setTaskName] = useState("");
-  const [projectID, setProjectID] = useState("");
-  const [userID, setUserID] = useState("");
+  const [nombreProyecto, setProjectID] = useState("");
+  const [emailUser, setUserID] = useState("");
   const [observation, setObservation] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
@@ -82,10 +82,9 @@ const TasksPage: React.FC = () => {
 
 
   const handleCreateTask = async () => {
-    if (!taskName || !projectID || !status) {
+    if (!taskName || !nombreProyecto || !status) {
       return;
     }
-
     setLoading(true);
 
     try {
@@ -97,11 +96,10 @@ const TasksPage: React.FC = () => {
         body: JSON.stringify({
           createTaskId: userData.user._id,
           nombre: taskName,
-          
           fechaInicio: format(new Date(startDate), 'dd/MM/yyyy'),
           fechaFin: format(new Date(endDate), 'dd/MM/yyyy') ,
-          proyectID: projectID,
-          userID: userID,
+          nombreProyecto: nombreProyecto,
+          emailUser: emailUser,
           observacion: observation,
           estado: status,
         }),
@@ -227,13 +225,13 @@ const TasksPage: React.FC = () => {
           <TextInput
             style={{ ...normalInput.input, width: 300 }}
             placeholder="Tarea del Proyecto"
-            value={projectID}
+            value={nombreProyecto}
             onChangeText={(text) => setProjectID(text)}
           />
           <TextInput
             style={{ ...normalInput.input, width: 300 }}
             placeholder="Usuario a ingresar (Opcional)"
-            value={userID}
+            value={emailUser}
             onChangeText={(text) => setUserID(text)}
           />
           <TextInput

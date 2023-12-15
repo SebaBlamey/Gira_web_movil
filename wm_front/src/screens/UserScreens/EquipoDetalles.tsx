@@ -42,14 +42,14 @@ const EquipoDetalles: React.FC = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const response = await fetch("http://10.0.2.2:3000/users/all");
+        const response = await fetch("http://localhost:3000/users/all");
         if (response.ok) {
           const allUsersData = await response.json();
 
           const usersNotOnTeam = await Promise.all(
             allUsersData.map(async (user) => {
               const response = await fetch(
-                `http://10.0.2.2:3000/equipo/${teamData._id}/${user.email}/userOnTeam`
+                `http://localhost:3000/equipo/${teamData._id}/${user.email}/userOnTeam`
               );
               const isUserOnTeam = await response.json();
               return isUserOnTeam ? null : user;
@@ -76,14 +76,14 @@ const EquipoDetalles: React.FC = () => {
           console.log(`userId en EquipoDetalles: ${userId}`);
 
           const responseRole = await fetch(
-            `http://10.0.2.2:3000/equipo/${teamData._id}/${userId}/roleOnTeam`
+            `http://localhost:3000/equipo/${teamData._id}/${userId}/roleOnTeam`
           );
           console.log(`response: ${responseRole.status}`);
           const role = responseRole.ok ? await responseRole.text() : "Miembro";
 
           // Obtener los detalles del usuario
           const responseUser = await fetch(
-            `http://10.0.2.2:3000/users/findById/${userId}`,
+            `http://localhost:3000/users/findById/${userId}`,
             {
               method: "GET",
               headers: {

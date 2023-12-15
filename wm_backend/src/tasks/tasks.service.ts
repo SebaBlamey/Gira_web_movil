@@ -15,19 +15,17 @@ export class TaskService {
   ) {}
 
   async crearTarea(taskDto: TasksDto): Promise<Task> {
-    const { proyectID, userID, ...rest } = taskDto;
-    const trabajo = await this.trabajoModel.findById(proyectID);
+    const { nombreProyecto, emailUser, ...rest } = taskDto;
+    const trabajo = await this.trabajoModel.findOne({ nombre: nombreProyecto });
     if (!trabajo) {
       throw new NotFoundException('El trabajo indicado no fue encontrado');
     }
 
-    if (userID) {
-      const usuario = await this.usuarioModel.findById(userID); 
-      if (!usuario) {
-        throw new NotFoundException('El usuario indicado no fue encontrado');
-      }
+    const usuario = await this.usuarioModel.findOne({email : emailUser}); 
+    if(!usuario) {
+      throw new NotFoundException('El usuario indicado no fue encontrado');
     }
-    const task = new this.taskModel({ proyectID, userID, ...rest });
+    const task = new this.taskModel({ nombreProyecto, emailUser, ...rest });
     return task.save();
   }
   async actualizarEstadoTarea(id: string, estado: 'PENDIENTE' | 'EN PROCESO' | 'COMPLETADO' | 'CERRADO'): Promise<Task> {

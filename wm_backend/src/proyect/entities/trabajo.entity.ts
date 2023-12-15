@@ -15,6 +15,8 @@ export class Trabajo extends Document {
 
   @Prop({ type: [{ Equipo: {type: Types.ObjectId, ref: 'Equipo'} }] }) 
   equipos?: { Equipo: Types.ObjectId }[];
+
+  
 }
 
 export const TrabajoSchema = SchemaFactory.createForClass(Trabajo);

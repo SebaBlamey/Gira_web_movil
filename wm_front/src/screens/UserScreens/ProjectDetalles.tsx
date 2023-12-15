@@ -38,7 +38,7 @@ const ProjectDetalles: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://10.0.2.2:3000/trabajo/join", {
+      const response = await fetch("http://localhost:3000/trabajo/join", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +64,7 @@ const ProjectDetalles: React.FC = () => {
       const teamsData = await Promise.all(
         projectData.equipos.map(async (teamId) => {
           const response = await fetch(
-            `http://10.0.2.2:3000/equipo/findById/${teamId.Equipo}`,
+            `http://localhost:3000/equipo/findById/${teamId.Equipo}`,
           );
           if(!response.ok){
             console.log(`error al buscar ${teamId.Equipo}\n${response.status}`);
