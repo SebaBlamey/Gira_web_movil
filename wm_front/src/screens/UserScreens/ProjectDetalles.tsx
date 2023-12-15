@@ -33,6 +33,7 @@ const ProjectDetalles: React.FC = () => {
     }, [])
   );
 
+
   const handleNewProject = async () => {
     setProjectAdded(false);
     setLoading(true);
@@ -61,24 +62,38 @@ const ProjectDetalles: React.FC = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       const teamsData = await Promise.all(
-        projectData.equipos.map(async (teamId) => {
+        projectData.equipos.map(async (team) => {
           const response = await fetch(
-            `http://10.0.2.2:3000/equipo/findById/${teamId.Equipo}`,
+            `http://10.0.2.2:3000/equipo/findById/${team.Equipo}`,
           );
-          if(!response.ok){
-            console.log(`error al buscar ${teamId.Equipo}\n${response.status}`);
-          }else{
-          const team = await response.json();
-          return team;
+          if (!response.ok) {
+            console.log(`error al buscar ${team.Equipo}\n${response.status}`);
+          } else {
+            try {
+              const responseText = await response.text();
+  
+              // Verificar si la respuesta tiene contenido antes de analizar
+              if (responseText.trim() !== "") {
+                const teamData = JSON.parse(responseText);
+                console.log(`se encontro al equipo ${team.Equipo}`);
+                return teamData;
+              } else {
+                console.log(`La respuesta para ${team.Equipo} está vacía.`);
+              }
+            } catch (error) {
+              console.error("Error al analizar la respuesta JSON", error);
+            }
           }
         })
       );
-      if(teamsData != null){
+      if (teamsData != null) {
         setEquipos(teamsData);
-    }
-    };
+        console.log(teamsData);
+      }
+    };    
     fetchTeams();
   }, [projectData._id]);
+  
 
   useEffect(() => {
     const fetchAllTeams = async () => {
@@ -149,19 +164,20 @@ const ProjectDetalles: React.FC = () => {
           }}
         >
           <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
-            Equipos:
-          </Text>
-          {equipos.length === 0 ? (
-            <Text style={{ color: "white", fontSize: 16 }}>
-              No hay equipos asignados
-            </Text>
-          ) : (
-            equipos.map((equipo, index) => (
-              <Text key={index} style={{ color: "white", fontSize: 16 }}>
-                {equipo.nombre}
-              </Text>
-            ))
-          )}
+  Equipos:
+</Text>
+{equipos.length === 0 ? (
+  <Text style={{ color: "white", fontSize: 16 }}>
+    No hay equipos asignados
+  </Text>
+) : (
+  equipos.map((equipo, index) => (
+    <Text key={index} style={{ color: "white", fontSize: 16 }}>
+      {equipo && equipo.nombre ? equipo.nombre : 'Nombre no disponible'}
+    </Text>
+  ))
+)}
+
         </View>
         <Text style={{ color: "white", fontSize: 20, marginTop: "10%" }}>
           Asignar equipo:

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { EquipoService } from './equipo.service';
 import { CreateEquipoDto } from './dto/equipo.dto';
 
@@ -55,8 +55,8 @@ export class EquipoController {
     return this.equipoService.deleteUserFromTeam(_idEquipo, _idUsuario);
   }
 
-  @Post('/delete/:idEquipo/:idUsuario')
+  @Delete('/delete/:idEquipo/:idUsuario')
   delete(@Param('idEquipo') _idEquipo: string, @Param('idUsuario') _idUsuario: string) {
-    return this.equipoService.delete(_idEquipo, _idUsuario);
+    return this.equipoService.delete(_idEquipo, _idUsuario)
   }
 }

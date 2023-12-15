@@ -51,6 +51,33 @@ const EquipoDetalles: React.FC = () => {
       setLoading(true);
     }, [])
   );
+
+  const handleDeleteTeam = async (userId: string) => {
+    try {
+      const response = await fetch(`http://10.0.2.2:3000/equipo/delete/${teamData._id}/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        setTimeout(() => {
+          navigation.navigate("TeamPage", { userData });
+        }, 1000);
+      } else {
+        const responseData = await response.json();
+        if (response.status === 404 && responseData.message === 'Equipo no encontrado') {
+          console.error('Error: Equipo no encontrado');
+        } else {
+          console.error(`Error de red: ${response.status}`);
+        }
+      }
+    } catch (error) {
+      console.error("Error de red", error);
+    }
+  }
+  
+
     const fetchAllUsers = useCallback(async () => {
       try {
         const response = await fetch("http://10.0.2.2:3000/users/all");
@@ -200,6 +227,7 @@ const EquipoDetalles: React.FC = () => {
 
   return (
     <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
+      <ScrollView style={{ backgroundColor: "#05161A" }}>
         <View
           style={{
             ...prettyContainer.container,
@@ -255,7 +283,7 @@ const EquipoDetalles: React.FC = () => {
                         Popup.show({
                             type: 'confirm',
                             title: 'Eliminar miembro!',
-                            textBody: 'Estas seguro que quieres borrar a este miembro? ',
+                            textBody:'Estas seguro que quieres borrar a este miembro? ',
                             buttonText: 'Si',
                             confirmText: 'No',
                             iconEnabled: false,
@@ -433,7 +461,44 @@ const EquipoDetalles: React.FC = () => {
                 marginTop: 10,
               }}
               onPress={() => {
-                console.log("Eliminar equipo");
+                Popup.show({
+                  type: 'confirm',
+                  title: 'Eliminar miembro!',
+                  textBody:'Estas seguro que quieres borrar a este miembro? ',
+                  buttonText: 'Si',
+                  confirmText: 'No',
+                  iconEnabled: false,
+                  modalContainerStyle : {
+                    backgroundColor: '#072E33',
+                    borderColor: '#0F989C',
+                    borderRadius: 8,
+                    borderWidth: 1,
+                  },
+                  titleTextStyle: {
+                    color: '#0F989C',
+                    fontSize: 25,
+                    fontWeight: 'bold',
+                  },
+                  descTextStyle: {
+                    color: '#fff',
+                  },
+                  okButtonStyle: {
+                    backgroundColor: '#0F989C',
+                    padding: 10,
+                  },
+                  confirmButtonStyle: {
+                    color: '#fff',
+                    borderWidth: 1,
+                    borderColor: '#0F989C',
+                  },
+                  callback: () => {
+                      handleDeleteTeam(userData.user._id);
+                      Popup.hide();
+                  },
+                  cancelCallback: () => {
+                      Popup.hide();
+                  },
+              })
               }}
             >
               <Text style={{ ...smallButton.text, color: "white" }}>
@@ -447,6 +512,7 @@ const EquipoDetalles: React.FC = () => {
             </Text>
           ) : null}
         </View>
+        </ScrollView>
     </KeyboardAvoidingView>
   );
 };
