@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Modal,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import styles from "../components/styles";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -132,6 +133,7 @@ const TasksPage: React.FC = () => {
 
   return (
     <KeyboardAvoidingView behavior="height" enabled style={{ flex: 1 }}>
+      <ScrollView>
     <View style={{...prettyContainer.container, flex:1}}>
       <View style={{...prettyContainer.headerContainer}}>
         <Image
@@ -151,23 +153,22 @@ const TasksPage: React.FC = () => {
           
           
           
-          <Text style={style.modalDescription}>
+          <Text style={{...style.modalDescription, color:'#fff'}}>
                     Selecciona las fechas de la tarea.
                   </Text>
                     <TouchableOpacity style={style.dateInitial} onPress={() => toggleModalDateInitial()}>
                       <Text style={style.buttonLabel}>Fecha Inicial</Text>
                     </TouchableOpacity>
-
-                    <Text style={style.modalDescription}>
-                    Fecha inicial seleccionada : {format(new Date(startDate), 'dd/MM/yyyy')}
+                    <Text style={{...style.modalDescription, color:'#fff'}}>
+                    Fecha inicial seleccionada : {startDate && !isNaN(new Date(startDate).getTime()) ? format(new Date(startDate), 'YYYY/MM/DD') : 'Fecha no válida'}
                   </Text>
 
                     <TouchableOpacity style={style.dateFinal} onPress={() => toggleModalDateFinal()}>
                       <Text style={style.buttonLabel}>Fecha Final</Text>
                     </TouchableOpacity>
 
-                  <Text style={style.modalDescription}>
-                    Fecha final seleccionada: {format(new Date(endDate), 'dd/MM/yyyy')}
+                  <Text style={{...style.modalDescription, color:'#fff'}}>
+                  Fecha final seleccionada: {endDate && !isNaN(new Date(endDate).getTime()) ? format(new Date(endDate), 'YYYY/MM/DD') : 'Fecha no válida'}
                   </Text>
                     <Modal
               animationType="slide"
@@ -292,6 +293,7 @@ const TasksPage: React.FC = () => {
         </View>
       </View>
       </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };

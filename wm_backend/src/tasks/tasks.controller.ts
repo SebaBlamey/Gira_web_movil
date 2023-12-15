@@ -26,12 +26,6 @@ export class TaskController {
     return this.tareaService.agregarComentarioTarea(id, comentario);
   }
 
-  @Get('user/:userId/tasks')
-  async getTasksByUserId(@Param('userId') userId: string) {
-    console.log(`Buscando tareas del usuario con id: ${userId}`)
-    return this.tareaService.getTasksByUserId(userId);
-  }
-
   @Get(':id') 
   async getTaskById(@Param('id') id: string): Promise<Task> {
     return this.tareaService.getTaskById(id);
@@ -40,6 +34,12 @@ export class TaskController {
   @Patch(':id')
   async actualizarTarea(@Param('id') id: string, @Body() tareaDto: TasksDto): Promise<Task> {
     return this.tareaService.actualizarTarea(id, tareaDto);
+  }
+
+  @Get('user/:userId/tasks')
+  async getTasksByUserId(@Param('userId') userId: string) {
+    console.log(`Buscando tareas del usuario con id: ${userId}`)
+    return this.tareaService.getTasksByUserId(userId);
   }
   
 }
