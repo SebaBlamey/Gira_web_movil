@@ -16,6 +16,9 @@ export class CreateTrabajoDto {
     @IsOptional()
     descripcion?: string;
 
+    @IsString()
+    creador: string
+
     @IsArray()
     @ValidateNested({each: true})
     @Type(() => EquipoDto)

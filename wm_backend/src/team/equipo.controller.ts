@@ -50,8 +50,13 @@ export class EquipoController {
     return this.equipoService.join(_idTeam, _userEmail,_role);
   }
 
-  @Post('/delete')
-  delete(@Body() _idEquipo: string, _idUsuario: string) {
+  @Post('/leave/:idEquipo/:idUsuario')
+  leave(@Param('idEquipo') _idEquipo: string, @Param('idUsuario') _idUsuario: string) {
+    return this.equipoService.deleteUserFromTeam(_idEquipo, _idUsuario);
+  }
+
+  @Post('/delete/:idEquipo/:idUsuario')
+  delete(@Param('idEquipo') _idEquipo: string, @Param('idUsuario') _idUsuario: string) {
     return this.equipoService.delete(_idEquipo, _idUsuario);
   }
 }

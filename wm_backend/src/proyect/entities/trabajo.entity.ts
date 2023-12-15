@@ -8,7 +8,9 @@ export class Trabajo extends Document {
   @Prop()
   nombre: string;
 
-  // agrega una descripcion al trabajo
+  @Prop()
+  creador: string;
+  
   @Prop()
   @IsOptional()
   descripcion?: string;

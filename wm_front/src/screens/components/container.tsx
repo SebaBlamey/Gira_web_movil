@@ -16,10 +16,10 @@ export const prettyContainer = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#201A30'
+      backgroundColor: '#05161A'
     },
     headerContainer: {
-      backgroundColor: '#0DF5E3',
+      backgroundColor: '#0F989C',
       width: '100%',
       borderBottomLeftRadius: 50,
       borderBottomRightRadius: 50,
@@ -42,17 +42,17 @@ export const prettyContainer = StyleSheet.create({
 
 export const roundedContainer = StyleSheet.create({
   container: {
-    backgroundColor: "#201A30",
+    backgroundColor: "#05161A",
     padding: 10,
     borderRadius: 10,
     width: 300, 
     alignSelf: "center",
     marginTop: 5,
     borderWidth: 1,
-    borderColor: "#0DF5E3"
+    borderColor: "#0F989C"
   },
   title: {
-    color: "#0DF5E3",
+    color: "#0F989C",
     fontSize: 14,
     fontWeight: "bold",
   },

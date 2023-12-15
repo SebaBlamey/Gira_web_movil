@@ -85,7 +85,7 @@ const ProjectDetalles: React.FC = () => {
   useEffect(() => {
     const fetchAllTeams = async () => {
       try {
-        const response = await fetch("http://localhost:3000/equipo/findAll");
+        const response = await fetch("http://10.0.2.2:3000/equipo/findAll");
         if (response.ok) {
           const allTeamsData = await response.json();
           setAllTeams(allTeamsData);

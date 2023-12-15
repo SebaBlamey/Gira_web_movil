@@ -22,8 +22,9 @@ export class TrabajoService {
       throw error; 
     }
   }
-  async findById(_id: string): Promise<Trabajo | null> {
-    return await this.trabajoModel.findById(_id).exec();
+  async findById(trabajoId: string): Promise<Trabajo | null> {
+    console.log(`Buscando trabajo con ID: ${trabajoId}`);
+    return await this.trabajoModel.findById(trabajoId).exec();
   }
 
   async equipoOnTrabajo(_idTrabajo: string, _idEquipo: string): Promise<boolean> {
@@ -101,10 +102,9 @@ export class TrabajoService {
     }
   }
   
-  
 
   async create(CreateTrabajoDto: CreateTrabajoDto): Promise<Trabajo> {
-    const { nombre, descripcion, equipos } = CreateTrabajoDto;
+    const { nombre, descripcion, creador, equipos } = CreateTrabajoDto;
   
     if (nombre == null) {
       console.log('El proyecto debe tener un nombre');
@@ -119,7 +119,7 @@ export class TrabajoService {
     }
 
   
-    const trabajo = new this.trabajoModel({ nombre,descripcion, equipos: [] });
+    const trabajo = new this.trabajoModel({ nombre,descripcion,creador, equipos: [] });
   
     if (equipos && equipos.length > 0) {
       const equiposIds = equipos.map(async ({ equipoId }) => {
@@ -139,31 +139,22 @@ export class TrabajoService {
   
 
 
-  async delete(_id: string): Promise<boolean> {
-    const deletedTrabajo = await this.findById(_id);
-  
+  async delete(_idTrabajo: string): Promise<boolean> {
+    const deletedTrabajo = await this.findById(_idTrabajo);
     if (!deletedTrabajo) {
       console.log('Trabajo no encontrado');
       throw new NotFoundException('Trabajo no encontrado');
     }
-  
-    if (deletedTrabajo.equipos && deletedTrabajo.equipos.length > 0) {
-      console.log('El trabajo tiene equipos');
-  
+    if(deletedTrabajo.equipos && deletedTrabajo.equipos.length > 0 ){
+      const equipo = await this.equipoService.findEquipoFromTrabajo(_idTrabajo);
       await Promise.all(
-        deletedTrabajo.equipos.map(async (equipoObj) => {
-          const equipo = await this.equipoService.findById(equipoObj.Equipo.toString());
-          if (equipo) {
-            equipo.trabajo = null;
-            await equipo.save();
-          }
-        }),
+        equipo.map(async (equipo) => {
+          this.equipoService.deleteTrabajoFromEquipo(equipo._id, _idTrabajo);
+        }
+      ),
       );
     }
-  
-    const deleted = await this.trabajoModel.deleteOne({ _id: _id }).exec();
-  
-    return deleted.deletedCount === 1;
+    const deleted = await this.trabajoModel.deleteOne({ _id: _idTrabajo }).exec();
+    return deleted.deletedCount > 0;
   }
-  
 }

@@ -167,6 +167,40 @@ export class EquipoService {
     return equipo.save();
   }
 
+  async deleteUserFromTeam(_idTeam: string, _idUser: string): Promise<Equipo> {
+    const equipo = await this.equipoModel.findById(_idTeam);
+    if (!equipo) {
+      console.log('Equipo no encontrado');
+      throw new NotFoundException('Equipo no encontrado');
+    }
+    const user = await this.userService.findByIdd(_idUser);
+    if (!user) {
+      console.log('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    const integrantes = equipo.integrantes;
+    if (integrantes && integrantes.length > 0) {
+      console.log('El equipo tiene integrantes');
+      const alreadyInTeam = integrantes.some((integrante) =>
+        integrante.user.equals(user._id),
+      );
+      if (alreadyInTeam) {
+        console.log('El usuario está en el equipo');
+        equipo.integrantes = integrantes.filter(
+          (integrante) => !integrante.user.equals(user._id),
+        );
+        await equipo.save();
+        user.equipos = user.equipos.filter(
+          (equipo) => !equipo.equipoId.equals(_idTeam),
+        );
+        await user.save();
+        return equipo;
+      }
+    }
+    console.log('El usuario no está en el equipo');
+    return equipo;
+  }
+
   async findEquipoFromUser(userId: string): Promise<Equipo[]> {
     console.log(`Buscando usuario con ID: ${userId}`);
     const user = await this.userService.findByIdd(userId);
@@ -209,14 +243,19 @@ export class EquipoService {
     }
   }
 
-  async deleteTrabajoFromEquipo(_id: string): Promise<Equipo> {
-    const equipo = await this.findById(_id);
-    if (!equipo) {
+  async deleteTrabajoFromEquipo(equipoId: string, trabajoId: string): Promise<Equipo> {
+    const equipo = await this.equipoModel.findById(equipoId);
+    if(!equipo){
       console.log('Equipo no encontrado');
       throw new NotFoundException('Equipo no encontrado');
     }
+    const trabajo = await this.trabajoModel.findById(trabajoId);
+    if(!trabajo){
+      console.log('Trabajo no encontrado');
+      throw new NotFoundException('Trabajo no encontrado');
+    }
     equipo.trabajo = null;
-    return await equipo.save();
+    return equipo
   }
 
   async delete(_idTeam: string, _idUsuario: string): Promise<boolean> {
@@ -227,7 +266,6 @@ export class EquipoService {
       throw new NotFoundException('Equipo no encontrado');
     }
 
-    // debe verificar que el usuario con el _idUsuario tenga el rol de administrador
     const role = await this.roleOnTeam(_idTeam, _idUsuario);
     if (role !== 'Admin') {
       console.log('No tiene permisos para eliminar el equipo');

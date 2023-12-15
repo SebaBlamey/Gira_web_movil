@@ -25,8 +25,8 @@ const StackNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false,
         headerStyle: {
-          backgroundColor: "#0DF5E3",
-          borderBottomColor: "#0DF5E3",
+          backgroundColor: "#0F989C",
+          borderBottomColor: "#0F989C",
         },
         headerTintColor: "#201A30",
       }}

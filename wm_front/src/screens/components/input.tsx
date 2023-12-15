@@ -5,15 +5,16 @@ const normalInput = StyleSheet.create({
     input: {
       maxWidth:400,
       width: "80%",
-      padding: 10,
+      padding: 15,
       marginBottom: 10,
       borderWidth: 1,
       borderRadius: 5,
-      borderColor: "#38304C",
-      backgroundColor: "#38304C",
+      borderColor: "#0DF5E3",
+      backgroundColor: "#072E33",
       alignContent: "center",
       color: "#fff",
       fontSize: 18,
+      
     },
     noInput: {
       width: "80%",
@@ -31,15 +32,15 @@ const normalInput = StyleSheet.create({
       descInput: {
         maxWidth: 400,
         width: "80%",
-        padding: 15, // Aumenté el padding para hacerlo más grande
+        padding: 15,
         marginBottom: 10,
         borderWidth: 1,
         borderRadius: 5,
-        borderColor: "#38304C",
-        backgroundColor: "#38304C",
+        borderColor: "#0DF5E3",
+        backgroundColor: "#072E33",
         alignContent: "center",
         color: "#fff",
-        fontSize: 20, // Aumenté el tamaño de la fuente
+        fontSize: 18, 
       },
   });
 export default normalInput;

@@ -55,7 +55,7 @@ const CreateProjectPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/trabajo/create", {
+      const response = await fetch("http://10.0.2.2:3000/trabajo/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,6 +63,7 @@ const CreateProjectPage: React.FC = () => {
         body: JSON.stringify({
           nombre: projectName,
           descripcion: projectDescription,
+          creador: userData.user._id,
           equipo: selectedTeam?._id,
         }),
       });
@@ -86,7 +87,7 @@ const CreateProjectPage: React.FC = () => {
   useEffect(() => {
     const fetchAllTeams = async () => {
       try {
-        const response = await fetch("http://localhost:3000/equipo/findAll");
+        const response = await fetch("http://10.0.2.2:3000/equipo/findAll");
         if (response.ok) {
           const allTeamsData = await response.json();
           setAllTeams(allTeamsData);
@@ -124,7 +125,7 @@ const CreateProjectPage: React.FC = () => {
           <TextInput
             style={{ ...normalInput.input, width: 200 }}
             placeholder="Nombre del proyecto"
-            placeholderTextColor={"#454052"}
+            placeholderTextColor={"#294D61"}
             value={projectName}
             onChangeText={(text) => {
               setProjectName(text);
@@ -140,7 +141,7 @@ const CreateProjectPage: React.FC = () => {
             }}
             multiline={true}
             placeholder="Descripcion del proyecto"
-            placeholderTextColor={"#454052"}
+            placeholderTextColor={"#294D61"}
             value={projectDescription}
             onChangeText={(text) => {
               setProjectDescription(text);

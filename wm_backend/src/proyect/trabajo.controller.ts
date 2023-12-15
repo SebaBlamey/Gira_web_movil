@@ -24,7 +24,11 @@ export class TrabajoController {
   equipoOnTrabajo(@Param('idTrabajo') _idTrabajo: string, @Param('idEquipo') _idEquipo: string) {
     return this.trabajoService.equipoOnTrabajo(_idTrabajo, _idEquipo);
   }
-
+  @Post('/delete/:idTrabajo/:idUsuario')
+  delete(@Param('idTrabajo') _idTrabajo: string, @Param('idUsuario') _idUsuario: string) {
+    return this.trabajoService.delete(_idTrabajo);
+  }
+  
 
   @Get('/findByName')
   findByName(@Body() nombre: string) {
@@ -34,10 +38,5 @@ export class TrabajoController {
   @Post('/create')
   create(@Body() CreateTrabajoDto: CreateTrabajoDto) {
     return this.trabajoService.create(CreateTrabajoDto);
-  }
-
-  @Post(':id/delete')
-  delete(@Param('id') _id: string) {
-    return this.trabajoService.delete(_id);
   }
 }
