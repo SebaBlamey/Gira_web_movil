@@ -34,6 +34,7 @@ const EquipoDetalles: React.FC = () => {
   const route = useRoute();
   const teamData = route.params?.equipo;
   const userData = route.params?.userData;
+  const temData=teamData.equipo;
   const [integrantes, setIntegrantes] = useState<User[]>([]);
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -54,7 +55,11 @@ const EquipoDetalles: React.FC = () => {
 
   const handleDeleteTeam = async (userId: string) => {
     try {
+<<<<<<< HEAD
+      const response = await fetch(`http://localhost:3000/equipo/delete/${teamData._id}/${userId}`, {
+=======
       const response = await fetch(`http://10.0.2.2:3000/equipo/delete/${teamData._id}/${userId}`, {
+>>>>>>> cdda50e89549e9faf68b34ec4de347500504148c
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +173,7 @@ const EquipoDetalles: React.FC = () => {
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", () => {
         console.log(
-          "La pantalla EquipoDetalles está en primer plano. Recargando datos..."
+          "La pantalla EquipoDetalles estÃ¡ en primer plano. Recargando datos..."
         );
         fetchUsernames();
         fetchAllUsers();
@@ -199,8 +204,6 @@ const EquipoDetalles: React.FC = () => {
   const handleNewMemberTeam = async () => {
     setUserAdded(false);
     if (!selectedUser) return;
-    console.log(`Usuario seleccionado: ${selectedUser}`);
-
     setLoading(true);
 
     try {
@@ -216,12 +219,10 @@ const EquipoDetalles: React.FC = () => {
         }),
       });
       if (response.ok) {
-        shouldLoad ? setShouldLoad(false) : setShouldLoad(true);
-        fetchUsernames();
-        fetchAllUsers();
-        fetchUserAdmin();
+        setShouldLoad((prev) => !prev);
         setUserAdded(true);
         setLoading(false);
+        navigation.navigate("TeamPage",{userData});
       }
     } catch (error) {
       setUserAdded(false);
