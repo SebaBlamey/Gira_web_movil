@@ -80,7 +80,7 @@ const EquipoDetalles: React.FC = () => {
     const fetchUserAdmin = useCallback(async () => {
       try {
         const response = await fetch(
-          `http://10.0.2.2:3000/equipo/${teamData._id}/${userData.user._id}/roleOnTeam`
+          `http://localhost:3000/equipo/${teamData._id}/${userData.user._id}/roleOnTeam`
         );
         if (response.ok) {
           const role = await response.text();
@@ -144,7 +144,7 @@ const EquipoDetalles: React.FC = () => {
 
   const handleDeleteMemberTeam = async (userId: string) => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/equipo/leave/${teamData._id}/${userId}`, {
+      const response = await fetch(`http://localhost:3000/equipo/leave/${teamData._id}/${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -169,7 +169,7 @@ const EquipoDetalles: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://10.0.2.2:3000/equipo/join", {
+      const response = await fetch("http://localhost:3000/equipo/join", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

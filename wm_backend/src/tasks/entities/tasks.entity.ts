@@ -6,10 +6,12 @@ import { User } from 'src/users/user.entity';
 @Schema()
 export class Task extends Document {
 
+
+
   @Prop({ type: Types.ObjectId, ref: 'User' ,required:true})
   createTaskId: User
 
-  @Prop({ required: true })
+  @Prop({ required: true,unique:true})
   nombre: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Trabajo', default: null })
