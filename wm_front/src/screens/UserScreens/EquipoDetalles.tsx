@@ -55,11 +55,7 @@ const EquipoDetalles: React.FC = () => {
 
   const handleDeleteTeam = async (userId: string) => {
     try {
-<<<<<<< HEAD
-      const response = await fetch(`http://localhost:3000/equipo/delete/${teamData._id}/${userId}`, {
-=======
       const response = await fetch(`http://10.0.2.2:3000/equipo/delete/${teamData._id}/${userId}`, {
->>>>>>> cdda50e89549e9faf68b34ec4de347500504148c
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -272,18 +268,18 @@ const EquipoDetalles: React.FC = () => {
             <View>
               {integrantes.map((user, index) => (
                 <View
-                  style={{
-                    alignContent: "flex-start",
-                    marginTop: "5%",
-                    width: "100%",
-                    borderWidth: 1,
-                    borderColor: "#0F989C",
-                    borderRadius: 10,
-                    alignSelf: "center",
-                    padding: 10,
-                    
-                  }}
-                >
+                key={index}
+                style={{
+                  alignContent: "flex-start",
+                  marginTop: "5%",
+                  width: "100%",
+                  borderWidth: 1,
+                  borderColor: "#0F989C",
+                  borderRadius: 10,
+                  alignSelf: "center",
+                  padding: 10,
+                }}
+              >
                   <Text key={index} style={{ color: "white", fontSize: 16 }}>
                     {user.email} [{user.role}]
                     {userAdmin && user.email != userData.user.email && (
