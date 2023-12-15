@@ -64,9 +64,9 @@ const EditTask: React.FC<EditTaskProps> = ({ route,navigation }) => {
       if (response.ok) {
         console.log('Tarea actualizada');
 
-        // Llama al callback de actualización después de la actualización exitosa
+       
         if (updateCallback) {
-          await updateCallback(); // Asegúrate de que fetchUserTasks devuelva una promesa
+          await updateCallback(); 
         }
 
         // Navega de nuevo a MyTasks

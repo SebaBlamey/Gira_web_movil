@@ -34,6 +34,7 @@ const EquipoDetalles: React.FC = () => {
   const route = useRoute();
   const teamData = route.params?.equipo;
   const userData = route.params?.userData;
+  const temData=teamData.equipo;
   const [integrantes, setIntegrantes] = useState<User[]>([]);
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -51,6 +52,33 @@ const EquipoDetalles: React.FC = () => {
       setLoading(true);
     }, [])
   );
+
+  const handleDeleteTeam = async (userId: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/equipo/delete/${teamData._id}/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        setTimeout(() => {
+          navigation.navigate("TeamPage", { userData });
+        }, 1000);
+      } else {
+        const responseData = await response.json();
+        if (response.status === 404 && responseData.message === 'Equipo no encontrado') {
+          console.error('Error: Equipo no encontrado');
+        } else {
+          console.error(`Error de red: ${response.status}`);
+        }
+      }
+    } catch (error) {
+      console.error("Error de red", error);
+    }
+  }
+  
+
     const fetchAllUsers = useCallback(async () => {
       try {
         const response = await fetch("http://localhost:3000/users/all");
@@ -133,7 +161,7 @@ const EquipoDetalles: React.FC = () => {
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", () => {
         console.log(
-          "La pantalla EquipoDetalles está en primer plano. Recargando datos..."
+          "La pantalla EquipoDetalles estÃ¡ en primer plano. Recargando datos..."
         );
         fetchUsernames();
         fetchAllUsers();
@@ -164,8 +192,6 @@ const EquipoDetalles: React.FC = () => {
   const handleNewMemberTeam = async () => {
     setUserAdded(false);
     if (!selectedUser) return;
-    console.log(`Usuario seleccionado: ${selectedUser}`);
-
     setLoading(true);
 
     try {
@@ -181,12 +207,10 @@ const EquipoDetalles: React.FC = () => {
         }),
       });
       if (response.ok) {
-        shouldLoad ? setShouldLoad(false) : setShouldLoad(true);
-        fetchUsernames();
-        fetchAllUsers();
-        fetchUserAdmin();
+        setShouldLoad((prev) => !prev);
         setUserAdded(true);
         setLoading(false);
+        navigation.navigate("TeamPage",{userData});
       }
     } catch (error) {
       setUserAdded(false);
@@ -200,6 +224,7 @@ const EquipoDetalles: React.FC = () => {
 
   return (
     <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
+      <ScrollView style={{ backgroundColor: "#05161A" }}>
         <View
           style={{
             ...prettyContainer.container,
@@ -255,7 +280,7 @@ const EquipoDetalles: React.FC = () => {
                         Popup.show({
                             type: 'confirm',
                             title: 'Eliminar miembro!',
-                            textBody: 'Estas seguro que quieres borrar a este miembro? ',
+                            textBody:'Estas seguro que quieres borrar a este miembro? ',
                             buttonText: 'Si',
                             confirmText: 'No',
                             iconEnabled: false,
@@ -433,7 +458,44 @@ const EquipoDetalles: React.FC = () => {
                 marginTop: 10,
               }}
               onPress={() => {
-                console.log("Eliminar equipo");
+                Popup.show({
+                  type: 'confirm',
+                  title: 'Eliminar miembro!',
+                  textBody:'Estas seguro que quieres borrar a este miembro? ',
+                  buttonText: 'Si',
+                  confirmText: 'No',
+                  iconEnabled: false,
+                  modalContainerStyle : {
+                    backgroundColor: '#072E33',
+                    borderColor: '#0F989C',
+                    borderRadius: 8,
+                    borderWidth: 1,
+                  },
+                  titleTextStyle: {
+                    color: '#0F989C',
+                    fontSize: 25,
+                    fontWeight: 'bold',
+                  },
+                  descTextStyle: {
+                    color: '#fff',
+                  },
+                  okButtonStyle: {
+                    backgroundColor: '#0F989C',
+                    padding: 10,
+                  },
+                  confirmButtonStyle: {
+                    color: '#fff',
+                    borderWidth: 1,
+                    borderColor: '#0F989C',
+                  },
+                  callback: () => {
+                      handleDeleteTeam(userData.user._id);
+                      Popup.hide();
+                  },
+                  cancelCallback: () => {
+                      Popup.hide();
+                  },
+              })
               }}
             >
               <Text style={{ ...smallButton.text, color: "white" }}>
@@ -447,6 +509,7 @@ const EquipoDetalles: React.FC = () => {
             </Text>
           ) : null}
         </View>
+        </ScrollView>
     </KeyboardAvoidingView>
   );
 };
