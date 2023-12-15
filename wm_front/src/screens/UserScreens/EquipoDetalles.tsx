@@ -90,7 +90,7 @@ const EquipoDetalles: React.FC = () => {
           allUsersData.map(async (user) => {
             try {
               const response = await fetch(
-                `http://10.0.2.2:3000/equipo/${teamData._id}/${user.email}/userOnTeam`
+                `http://localhost:3000/equipo/${teamData._id}/${user.email}/userOnTeam`
               );
               const isUserOnTeam = await response.json();
               return isUserOnTeam ? null : user;
@@ -116,7 +116,7 @@ const EquipoDetalles: React.FC = () => {
     const fetchUserAdmin = useCallback(async () => {
       try {
         const response = await fetch(
-          `http://10.0.2.2:3000/equipo/${teamData._id}/${userData.user._id}/roleOnTeam`
+          `http://localhost:3000/equipo/${teamData._id}/${userData.user._id}/roleOnTeam`
         );
         if (response.ok) {
           const role = await response.text();
@@ -139,13 +139,13 @@ const EquipoDetalles: React.FC = () => {
           console.log(`userId en EquipoDetalles: ${userId}`);
 
           const responseRole = await fetch(
-            `http://10.0.2.2:3000/equipo/${teamData._id}/${userId}/roleOnTeam`
+            `http://localhost:3000/equipo/${teamData._id}/${userId}/roleOnTeam`
           );
           console.log(`response: ${responseRole.status}`);
           const role = responseRole.ok ? await responseRole.text() : "Miembro";
 
           const responseUser = await fetch(
-            `http://10.0.2.2:3000/users/findById/${userId}`,
+            `http://localhost:3000/users/findById/${userId}`,
             {
               method: "GET",
               headers: {
@@ -180,7 +180,7 @@ const EquipoDetalles: React.FC = () => {
 
   const handleDeleteMemberTeam = async (userId: string) => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/equipo/leave/${teamData._id}/${userId}`, {
+      const response = await fetch(`http://localhost:3000/equipo/leave/${teamData._id}/${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -203,7 +203,7 @@ const EquipoDetalles: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://10.0.2.2:3000/equipo/join", {
+      const response = await fetch("http://localhost:3000/equipo/join", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
