@@ -7,21 +7,23 @@ import {
   Pressable,
   ActivityIndicator,
   KeyboardAvoidingView,
+  Modal,
+  TouchableOpacity,
 } from "react-native";
 import styles from "../components/styles";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import normalInput from "../components/input";
-import { smallButton } from "../components/button";
+import { smallButton, button } from "../components/button";
+import * as style from "../components/calendar";
 import { prettyContainer } from "../components/container";
 import header from "../components/header";
 import { SelectList } from "react-native-dropdown-select-list";
 import { FontAwesome } from "@expo/vector-icons";
-
+import DateTimePicker, { DateType } from 'react-native-ui-datepicker'
+import dayjs from 'dayjs';
 
 const TasksPage: React.FC = () => {
   const [taskName, setTaskName] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
   const [projectID, setProjectID] = useState("");
   const [userID, setUserID] = useState("");
   const [observation, setObservation] = useState("");
@@ -29,13 +31,19 @@ const TasksPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
+  const [startDate, setStartDate] = useState(dayjs().format('YYYY/MM/DD'));
+  const [endDate, setEndDate] = useState(dayjs().format('YYYY/MM/DD'));
+   const [dateInitialModal, setDateInitialModal] = useState(false);
+    const [dateFinalModal, setDateFinalModal] = useState(false);
+  const [userCurrentDate, setUserCurrentDate] = useState(dayjs().format('YYYY/MM/DD'));
+  const [errorDate, setErrorDate] = useState('');
+  const [isCloseButtonDisabled, setCloseButtonDisabled] = useState(false);
+  const estados = ['PENDIENTE', 'EN PROCESO', 'COMPLETADO', 'CERRADO']
+  const [selectedStatus, setSelectedStatus] = useState<string>("PENDIENTE");
+
   interface UserData {
     userData: any;
   }
-  const estados = ['PENDIENTE', 'EN PROCESO', 'COMPLETADO', 'CERRADO']
-  const [selectedStatus, setSelectedStatus] = useState<string>("PENDIENTE");
-  {/*estado: 'PENDIENTE' | 'EN PROCESO' | 'COMPLETADO' | 'CERRADO';
- */}
 
   useEffect(() => {
     setStatus(selectedStatus);
@@ -43,6 +51,32 @@ const TasksPage: React.FC = () => {
   , [selectedStatus]);
 
   const userData = (route.params as UserData)?.userData;
+
+  const handleDateInitialChange = (date: DateType) => {
+    const selectedDate = date ? dayjs(date.toString()).format('YYYY/MM/DD') : '';
+    if (selectedDate < userCurrentDate) {
+      setErrorDate('La fecha inicial no puede ser anterior a la fecha actual');
+      setCloseButtonDisabled(true);
+    } else {
+      setStartDate(selectedDate);
+      setErrorDate('');
+      setCloseButtonDisabled(false); 
+    }
+  };
+
+  const handleDateFinalChange = (date: DateType) => {
+    const selectedDate = date ? dayjs(date.toString()).format('YYYY/MM/DD') : '';
+
+    
+    if (selectedDate < startDate || selectedDate < userCurrentDate) {
+      setErrorDate('La fecha final no puede ser anterior a la fecha inicial o la fecha actual');
+      setCloseButtonDisabled(true); 
+    } else {
+      setEndDate(selectedDate);
+      setErrorDate('');
+      setCloseButtonDisabled(false); 
+    }
+  };
 
   const handleCreateTask = async () => {
     if (!taskName || !projectID || !status) {
@@ -52,7 +86,7 @@ const TasksPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://10.0.2.2:3000/tasks/create", {
+      const response = await fetch("http://localhost:3000/tasks/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -81,6 +115,19 @@ const TasksPage: React.FC = () => {
     }
   };
 
+  const toggleModalDateInitial = () => {
+    setDateInitialModal(true);
+    setErrorDate(''); // Reiniciar el mensaje de error al abrir el modal de fecha inicial
+    setCloseButtonDisabled(false); // Habilitar el botón de cerrar al abrir el modal
+
+  }
+
+  const toggleModalDateFinal = () => {
+    setDateFinalModal(true);
+    setErrorDate(''); 
+    setCloseButtonDisabled(false);   
+  }
+
   return (
     <KeyboardAvoidingView behavior="height" enabled style={{ flex: 1 }}>
     <View style={{...prettyContainer.container, flex:1}}>
@@ -99,18 +146,81 @@ const TasksPage: React.FC = () => {
             value={taskName}
             onChangeText={(text) => setTaskName(text)}
           />
-          <TextInput
-            style={{ ...normalInput.input, width: 300 }}
-            placeholder="Fecha de inicio (Opcional)"
-            value={startDate}
-            onChangeText={(text) => setStartDate(text)}
-          />
-          <TextInput
-            style={{ ...normalInput.input, width: 300 }}
-            placeholder="Fecha de fin (Opcional)"
-            value={endDate}
-            onChangeText={(text) => setEndDate(text)}
-          />
+          
+          
+          
+          <Text style={style.modalDescription}>
+                    Selecciona las fechas de la tarea.
+                  </Text>
+                    <TouchableOpacity style={style.dateInitial} onPress={() => toggleModalDateInitial()}>
+                      <Text style={style.buttonLabel}>Fecha Inicial</Text>
+                    </TouchableOpacity>
+
+                    <Text style={style.modalDescription}>
+                    Fecha inicial seleccionada : {startDate}
+                  </Text>
+
+                    <TouchableOpacity style={style.dateFinal} onPress={() => toggleModalDateFinal()}>
+                      <Text style={style.buttonLabel}>Fecha Final</Text>
+                    </TouchableOpacity>
+
+                  <Text style={style.modalDescription}>
+                    Fecha final seleccionada: {endDate}
+                  </Text>
+
+                    <Modal
+              animationType="slide"
+              transparent={true}
+              visible={dateInitialModal}
+              onRequestClose={() => setDateInitialModal(false)}
+            >
+              <View style={style.modalContainerCalendar}>
+                <View style={style.modalContentCalendar}>
+                  <Text style={style.modalTitle}>Selecciona Fecha Inicial</Text>
+
+                  <View style={style.buttonLabel}>
+                    <DateTimePicker value={startDate} onValueChange={handleDateInitialChange} />
+                  </View>
+
+                  {errorDate && <Text style={style.errorText}>{errorDate}</Text>} 
+
+                  <TouchableOpacity
+                    style={[style.cancelButtonCalendar, isCloseButtonDisabled && { opacity: 0.5 }]}
+                    onPress={() => setDateInitialModal(false)}
+                    disabled={isCloseButtonDisabled} // Deshabilitar el botón según el estado
+                  >
+                    <Text style={style.buttonLabel}>Cancelar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={dateFinalModal}
+              onRequestClose={() => setDateFinalModal(false)}
+            >
+              <View style={style.modalContainerCalendar}>
+                <View style={style.modalContentCalendar}>
+                  <Text style={style.modalTitle}>Selecciona Fecha Final</Text>
+
+                  <DateTimePicker value={endDate} onValueChange={handleDateFinalChange} />
+
+                  {errorDate && <Text style={style.errorText}>{errorDate}</Text>}
+
+                  <TouchableOpacity
+                    style={[style.cancelButtonCalendar, isCloseButtonDisabled && { opacity: 0.5 }]}
+                    onPress={() => setDateFinalModal(false)}
+                    disabled={isCloseButtonDisabled} // Deshabilitar el botón según el estado
+                  >
+                    <Text style={style.buttonLabel}>Cancelar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+
+
           <TextInput
             style={{ ...normalInput.input, width: 300 }}
             placeholder="Tarea del Proyecto"

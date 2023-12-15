@@ -6,7 +6,7 @@ import { User } from 'src/users/user.entity';
 export class TasksDto {
 
   @IsOptional()
-  createTaskId?:User;
+  createTaskId:User;
 
   @IsString()
   @IsNotEmpty()

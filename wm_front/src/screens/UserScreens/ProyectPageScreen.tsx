@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Image, Text, ActivityIndicator, Pressable } from "react-native";
 import styles from "../components/styles";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { container, prettyContainer } from "../components/container";
 import header from "../components/header";
 import { defaultButton, equipoButton } from "../components/button";
-
 interface Proyecto {
   _id: string;
   nombre: string;
@@ -21,33 +20,40 @@ const ProyectoPage: React.FC = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
 
+  const fetchProjects = useCallback(async () => {
+    try {
+      const response = await fetch('http://localhost:3000/trabajo/findAll');
+      const data = await response.json();
+      setProjects(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error al cargar los proyectos:", error);
+      setLoading(false);
+    }
+  }, []);
+
   const handleProyectoButtonClick = (proyecto: Proyecto) => {
     navigation.navigate("ProyectoDetalles", { proyecto });
-    //console.log(proyecto);
-  }
+  };
+
   const navigateToCreateProject = () => {
     navigation.navigate("CreateProject", { userData });
-    //console.log(proyecto);
   };
 
   useEffect(() => {
-    fetch('http://10.0.2.2:3000/trabajo/findAll')
-    .then((response) => response.json())
-    .then((data) => {
-      setProjects(data);
-      setLoading(false);
-    })
-    .catch((error) => {
-      console.error("Error al cargar los proyectos:", error);
-      setLoading(false);
+    const unsubscribe = navigation.addListener("focus", () => {
+      console.log("La pantalla ProyectoPage está en primer plano. Recargando datos...");
+      fetchProjects();
     });
-  }, [])
+
+    return unsubscribe;
+  }, [navigation, fetchProjects]);
 
   return (
     <View
       style={{
         ...prettyContainer.container,
-        flex: 1,  
+        flex: 1,
         justifyContent: "flex-start",
       }}
     >
@@ -57,14 +63,14 @@ const ProyectoPage: React.FC = () => {
           style={{ ...styles.image }}
         />
       </View>
-      <Text style={{fontSize:20, color:'#fff',marginTop:'10%'}}>
+      <Text style={{ fontSize: 20, color: "#fff", marginTop: "10%" }}>
         Proyectos existentes:
       </Text>
-      {projects.length === 0 ? (
-        <Text style={{ fontSize: 15, color: "#fff" }}>
-        No existen proyectos :(
-      </Text>
-      ):(
+      {loading ? (
+        <Text style={{ fontSize: 15, color: "#fff" }}>Cargando proyectos...</Text>
+      ) : projects.length === 0 ? (
+        <Text style={{ fontSize: 15, color: "#fff" }}>No existen proyectos :(</Text>
+      ) : (
         projects.map((project) => (
           <Pressable
             key={project._id}
