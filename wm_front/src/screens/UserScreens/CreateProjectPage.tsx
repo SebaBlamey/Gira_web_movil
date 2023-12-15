@@ -56,7 +56,7 @@ const CreateProjectPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://10.0.2.2:3000/trabajo/create", {
+      const response = await fetch("http://localhost:3000/trabajo/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +96,7 @@ const CreateProjectPage: React.FC = () => {
   useEffect(() => {
     const fetchAllTeams = async () => {
       try {
-        const response = await fetch("http://10.0.2.2:3000/equipo/findAll");
+        const response = await fetch("http://localhost:3000/equipo/findAll");
         if (response.ok) {
           const allTeamsData = await response.json();
           setAllTeams(allTeamsData);

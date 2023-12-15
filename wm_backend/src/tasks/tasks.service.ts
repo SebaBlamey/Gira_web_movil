@@ -5,6 +5,7 @@ import { Task, TaskDocument } from './entities//tasks.entity';
 import { TasksDto } from './dto/tasks.dto';
 import { Trabajo, TrabajoDocument } from 'src/proyect/entities/trabajo.entity';
 import { User, UserDocument } from '../users/user.entity';
+import { ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class TaskService {
@@ -15,19 +16,31 @@ export class TaskService {
   ) {}
 
   async crearTarea(taskDto: TasksDto): Promise<Task> {
-    const { nombreProyecto, emailUser, ...rest } = taskDto;
-    const trabajo = await this.trabajoModel.findOne({ nombre: nombreProyecto });
-    if (!trabajo) {
-      throw new NotFoundException('El trabajo indicado no fue encontrado');
+    const { nombre, nombreProyecto, emailUser, ...rest } = taskDto;
+    try {
+      const existingTask = await this.taskModel.findOne({ nombre });
+      if (existingTask) {
+        throw new ConflictException('Ya existe una tarea con el mismo nombre');
+      }
+  
+      const trabajo = await this.trabajoModel.findOne({ nombre: nombreProyecto });
+      if (!trabajo) {
+        throw new NotFoundException('El trabajo indicado no fue encontrado');
+      }
+  
+      const usuario = await this.usuarioModel.findOne({ email: emailUser });
+      if (!usuario) {
+        throw new NotFoundException('El usuario indicado no fue encontrado');
+      }
+  
+      const task = new this.taskModel({ nombre, nombreProyecto, emailUser, ...rest });
+      return task.save();
+    } catch (error) {
+      throw error;
     }
-
-    const usuario = await this.usuarioModel.findOne({email : emailUser}); 
-    if(!usuario) {
-      throw new NotFoundException('El usuario indicado no fue encontrado');
-    }
-    const task = new this.taskModel({ nombreProyecto, emailUser, ...rest });
-    return task.save();
   }
+  
+  
   async actualizarEstadoTarea(id: string, estado: 'PENDIENTE' | 'EN PROCESO' | 'COMPLETADO' | 'CERRADO'): Promise<Task> {
     const task = await this.taskModel.findByIdAndUpdate(id, { estado }, { new: true });
     return task;
