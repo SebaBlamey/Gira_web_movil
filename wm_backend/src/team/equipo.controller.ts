@@ -15,6 +15,22 @@ export class EquipoController {
   create(@Body() createEquipoDto: CreateEquipoDto) {
     return this.equipoService.create(createEquipoDto);
   }
+
+  @Get('/findByName')
+  findByName(@Body() nombre: string) {
+    return this.equipoService.findByName(nombre);
+  }
+
+  @Get('findById/:id')
+  findById(@Param('id') _id: string) {
+    return this.equipoService.findById(_id); 
+  }
+
+  @Get(':id/findTeamsFromUserId')
+  findTeamsFromUserId(@Param('id') _id: string) {
+    return this.equipoService.findEquipoFromUser(_id);
+  }
+
   @Get(':idTeam/:idUser/userOnTeam') // debe retornar un boolean
   userOnTeam(@Param('idTeam') _idTeam: string, @Param('idUser') _idUser: string) {
     return this.equipoService.userOnTeam(_idTeam, _idUser);
@@ -27,7 +43,6 @@ export class EquipoController {
   
   @Post('/join')
   Join(@Body() { _idTeam, _userEmail, _role }: { _idTeam: string, _userEmail: string, _role: string }) {
-    console.log(`Buscando Team con ID: ${_idTeam}`)
     /*const team = this.equipoService.findById(_idTeam);
     if(team) {
       console.log('Equipoencontradp');
@@ -35,23 +50,8 @@ export class EquipoController {
     return this.equipoService.join(_idTeam, _userEmail,_role);
   }
 
-  @Get(':id/findTeamsFromUserId')
-  findTeamsFromUserId(@Param('id') _id: string) {
-    return this.equipoService.findEquipoFromUser(_id);
-  }
-
-  @Get('findById/:id')
-  findById(@Param('id') _id: string) {
-    return this.equipoService.findById(_id); 
-  }
-
-  @Get('/findByName')
-  findByName(@Body() nombre: string) {
-    return this.equipoService.findByName(nombre);
-  }
-
   @Post('/delete')
-  delete(@Body() _id: string) {
-    return this.equipoService.delete(_id);
+  delete(@Body() _idEquipo: string, _idUsuario: string) {
+    return this.equipoService.delete(_idEquipo, _idUsuario);
   }
 }
