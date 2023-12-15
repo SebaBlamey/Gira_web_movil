@@ -62,7 +62,8 @@ const EquipoDetalles: React.FC = () => {
       });
       if (response.ok) {
         setTimeout(() => {
-          navigation.navigate("TeamPage", { userData });
+          // Verificar si userData está definido antes de navegar
+          userData && navigation.navigate("TeamPage", { userData });
         }, 1000);
       } else {
         const responseData = await response.json();
@@ -78,31 +79,38 @@ const EquipoDetalles: React.FC = () => {
   }
   
 
-    const fetchAllUsers = useCallback(async () => {
-      try {
-        const response = await fetch("http://10.0.2.2:3000/users/all");
-        if (response.ok) {
-          const allUsersData = await response.json();
-
-          const usersNotOnTeam = await Promise.all(
-            allUsersData.map(async (user) => {
+  const fetchAllUsers = useCallback(async () => {
+    try {
+      const response = await fetch("http://10.0.2.2:3000/users/all");
+      if (response.ok) {
+        const allUsersData = await response.json();
+  
+        const usersNotOnTeam = await Promise.all(
+          allUsersData.map(async (user) => {
+            try {
               const response = await fetch(
                 `http://10.0.2.2:3000/equipo/${teamData._id}/${user.email}/userOnTeam`
               );
               const isUserOnTeam = await response.json();
               return isUserOnTeam ? null : user;
-            })
-          );
-
-          const filteredUsers = usersNotOnTeam.filter(Boolean);
-
-          setAllUsers(filteredUsers);
-        }
-      } catch (error) {
-        console.error("Error al obtener la lista de usuarios", error);
+            } catch (errorOnTeamCheck) {
+              console.error("Error al verificar el estado del usuario en el equipo", errorOnTeamCheck);
+              return user;
+            }
+          })
+        );
+  
+        const filteredUsers = usersNotOnTeam.filter(Boolean);
+  
+        setAllUsers(filteredUsers);
+      } else {
+        console.error("Error al obtener la lista de usuarios. Estado de la respuesta:", response.status);
       }
+    } catch (error) {
+      console.error("Error al obtener la lista de usuarios", error);
     }
-    , [teamData._id]);
+  }, [teamData._id]);
+  
 
     const fetchUserAdmin = useCallback(async () => {
       try {
