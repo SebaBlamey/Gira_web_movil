@@ -21,6 +21,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { FontAwesome } from "@expo/vector-icons";
 import DateTimePicker, { DateType } from 'react-native-ui-datepicker'
 import dayjs from 'dayjs';
+import { format } from 'date-fns';
 
 const TasksPage: React.FC = () => {
   const [taskName, setTaskName] = useState("");
@@ -78,6 +79,8 @@ const TasksPage: React.FC = () => {
     }
   };
 
+
+
   const handleCreateTask = async () => {
     if (!taskName || !projectID || !status) {
       return;
@@ -94,8 +97,9 @@ const TasksPage: React.FC = () => {
         body: JSON.stringify({
           createTaskId: userData.user._id,
           nombre: taskName,
-          fechaInicio: startDate,
-          fechaFin: endDate,
+          
+          fechaInicio: format(new Date(startDate), 'dd/MM/yyyy'),
+          fechaFin: format(new Date(endDate), 'dd/MM/yyyy') ,
           proyectID: projectID,
           userID: userID,
           observacion: observation,
@@ -157,7 +161,7 @@ const TasksPage: React.FC = () => {
                     </TouchableOpacity>
 
                     <Text style={style.modalDescription}>
-                    Fecha inicial seleccionada : {startDate}
+                    Fecha inicial seleccionada : {format(new Date(startDate), 'dd/MM/yyyy')}
                   </Text>
 
                     <TouchableOpacity style={style.dateFinal} onPress={() => toggleModalDateFinal()}>
@@ -165,9 +169,8 @@ const TasksPage: React.FC = () => {
                     </TouchableOpacity>
 
                   <Text style={style.modalDescription}>
-                    Fecha final seleccionada: {endDate}
+                    Fecha final seleccionada: {format(new Date(endDate), 'dd/MM/yyyy')}
                   </Text>
-
                     <Modal
               animationType="slide"
               transparent={true}
@@ -189,7 +192,7 @@ const TasksPage: React.FC = () => {
                     onPress={() => setDateInitialModal(false)}
                     disabled={isCloseButtonDisabled} // Deshabilitar el botón según el estado
                   >
-                    <Text style={style.buttonLabel}>Cancelar</Text>
+                    <Text style={style.buttonLabel}>Aceptar</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -214,7 +217,7 @@ const TasksPage: React.FC = () => {
                     onPress={() => setDateFinalModal(false)}
                     disabled={isCloseButtonDisabled} // Deshabilitar el botón según el estado
                   >
-                    <Text style={style.buttonLabel}>Cancelar</Text>
+                    <Text style={style.buttonLabel}>Aceptar</Text>
                   </TouchableOpacity>
                 </View>
               </View>

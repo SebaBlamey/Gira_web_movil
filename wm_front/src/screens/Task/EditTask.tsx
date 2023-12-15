@@ -28,7 +28,7 @@ const EditTask: React.FC<EditTaskProps> = ({ route }) => {
   useEffect(() => {
     const fetchTaskDetails = async () => {
       try {
-        const response = await fetch(`http://10.0.2.2:3000/tasks/${id}`);
+        const response = await fetch(`http://localhost:3000/tasks/${id}`);
         if (response.ok) {
           const data = await response.json();
           setTask(data);
