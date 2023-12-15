@@ -79,7 +79,7 @@ const EditTask: React.FC<EditTaskProps> = ({ route }) => {
 
   return (
     <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
-      <ScrollView>
+      <ScrollView style={{backgroundColor:"#05161A"}}>
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
   <View style={{ backgroundColor: '#f4f4f4', padding: 20, borderRadius: 10, width: '80%' }}>
     <Text style={{ fontSize: 24, textAlign: 'center', marginBottom: 20, color: '#333', fontWeight: 'bold' }}>

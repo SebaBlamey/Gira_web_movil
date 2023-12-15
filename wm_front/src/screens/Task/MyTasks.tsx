@@ -66,7 +66,7 @@ const MyTasks: React.FC = () => {
 
   return (
     <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
-    <ScrollView>
+    <ScrollView style={{backgroundColor:"#05161A"}}>
     <View style={{ ...prettyContainer.container, flex:1,
     justifyContent: 'flex-start' }}>
       <View style={prettyContainer.headerContainer}>
