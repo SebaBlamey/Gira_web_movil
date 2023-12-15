@@ -160,7 +160,7 @@ const TasksPage: React.FC = () => {
                       <Text style={style.buttonLabel}>Fecha Inicial</Text>
                     </TouchableOpacity>
                     <Text style={{...style.modalDescription, color:'#fff'}}>
-                    Fecha inicial seleccionada : {startDate && !isNaN(new Date(startDate).getTime()) ? format(new Date(startDate), 'YYYY/MM/DD') : 'Fecha no válida'}
+                    Fecha inicial seleccionada : {format(new Date(endDate), 'dd/MM/yyyy')}
                   </Text>
 
                     <TouchableOpacity style={style.dateFinal} onPress={() => toggleModalDateFinal()}>
@@ -168,7 +168,7 @@ const TasksPage: React.FC = () => {
                     </TouchableOpacity>
 
                   <Text style={{...style.modalDescription, color:'#fff'}}>
-                  Fecha final seleccionada: {endDate && !isNaN(new Date(endDate).getTime()) ? format(new Date(endDate), 'YYYY/MM/DD') : 'Fecha no válida'}
+                  Fecha final seleccionada: {format(new Date(endDate), 'dd/MM/yyyy')}
                   </Text>
                     <Modal
               animationType="slide"

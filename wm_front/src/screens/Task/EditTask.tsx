@@ -12,7 +12,8 @@ interface EditTaskProps {
   };
 }
 
-const EditTask: React.FC<EditTaskProps> = ({ route }) => {
+const EditTask: React.FC<EditTaskProps> = ({ route,navigation }) => {
+  const { id, userData, updateCallback } = route.params;
   const [task, setTask] = useState({
     nombre: '',
     fechaInicio: '',
@@ -22,14 +23,13 @@ const EditTask: React.FC<EditTaskProps> = ({ route }) => {
     estado: '',
   });
 
-  const { id } = route.params;
 
 
 
   useEffect(() => {
     const fetchTaskDetails = async () => {
       try {
-        const response = await fetch(`http://10.0.2.2:3000/tasks/${id}`);
+        const response = await fetch(`http://localhost:3000/tasks/${id}`);
         if (response.ok) {
           const data = await response.json();
           setTask(data);
@@ -53,28 +53,30 @@ const EditTask: React.FC<EditTaskProps> = ({ route }) => {
 
   const handleUpdateTask = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/tasks/${id}`, {
+      const response = await fetch(`http://localhost:3000/tasks/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(task),
       });
+
       if (response.ok) {
-        
         console.log('Tarea actualizada');
-        
-        
+
+        // Llama al callback de actualización después de la actualización exitosa
+        if (updateCallback) {
+          await updateCallback(); // Asegúrate de que fetchUserTasks devuelva una promesa
+        }
+
+        // Navega de nuevo a MyTasks
+        navigation.navigate("MyTasks", { userData });
       } else {
         throw new Error('Error al actualizar la tarea');
       }
     } catch (error) {
       console.error('Error al actualizar la tarea:', error);
     }
-    
-    
-   
-    
   };
 
   return (

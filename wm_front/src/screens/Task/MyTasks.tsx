@@ -19,9 +19,8 @@ const MyTasks: React.FC = () => {
   const userData = (route.params as UserData)?.userData;
   const idUser = (route.params as UserData)?.userData;
   const navigateToEditTask = (id: string) => {
-    navigation.navigate("EditTask", { id });
+    navigation.navigate("EditTask", { id,userData, updateCallback: fetchUserTasks });
   };
-
   const getEstadoColor = (estado) => {
     switch (estado.toLowerCase()) {
       case 'completo':
@@ -36,13 +35,29 @@ const MyTasks: React.FC = () => {
         return 'black';
     }
   };
-
+  const fetchUserTasks = async () => {
+    try {
+      console.log(`buscando al id ${userData.user._id}`);
+      const response = await fetch(
+        `http://localhost:3000/tasks/user/${userData.user._id}/tasks`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setUserTasks(data);
+        console.log(data);
+      } else {
+        throw new Error("Error al obtener las tareas del usuario");
+      }
+    } catch (error) {
+      console.error("Error al obtener las tareas del usuario:", error);
+    }
+  };
   useEffect(() => {
     const fetchUserTasks = async () => {
       try {
         console.log(`buscando al id ${userData.user._id}`)
         const response = await fetch(
-          `http://10.0.2.2:3000/tasks/user/${userData.user._id}/tasks`
+          `http://localhost:3000/tasks/user/${userData.user._id}/tasks`
         );
         if (response.ok) {
           const data = await response.json();
