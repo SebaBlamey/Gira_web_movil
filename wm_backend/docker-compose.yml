@@ -11,7 +11,10 @@ services:
     ports:
       - 3000:3000
     network_mode: "host"
-    command: npm run start:dev  # Agregamos esta línea para especificar el comando al iniciar el contenedor
+    command: npx nodemon --legacy-watch start:dev
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
   mongodb:
     image: mongo:latest
     ports:

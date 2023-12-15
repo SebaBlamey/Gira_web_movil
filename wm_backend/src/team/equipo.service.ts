@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Equipo, EquipoDocument } from './entities/equipo.entity';
@@ -21,7 +25,7 @@ export class EquipoService {
   }
 
   async findById(teamId: string): Promise<Equipo | null> {
-    console.log(`Buscando equipo con ID: ${teamId}`)
+    console.log(`Buscando equipo con ID: ${teamId}`);
     return await this.equipoModel.findById(teamId).exec();
   }
 
@@ -43,7 +47,9 @@ export class EquipoService {
     const integrantes = equipo.integrantes;
     if (integrantes && integrantes.length > 0) {
       console.log('El equipo tiene integrantes');
-      const alreadyInTeam = integrantes.some((integrante) => integrante.user.equals(user._id));
+      const alreadyInTeam = integrantes.some((integrante) =>
+        integrante.user.equals(user._id),
+      );
       if (alreadyInTeam) {
         console.log('El usuario está en el equipo');
         return true;
@@ -58,14 +64,16 @@ export class EquipoService {
       console.log('Equipo no encontrado');
       throw new NotFoundException('Equipo no encontrado');
     }
-    const user = await this.userService.findByEmail(_userEmail);
+    const user = await this.userService.findByIdd(_userEmail);
     if (!user) {
       console.log('Usuario no encontrado');
       throw new NotFoundException('Usuario no encontrado');
     }
     const integrantes = equipo.integrantes;
     if (integrantes && integrantes.length > 0) {
-      const alreadyInTeam = integrantes.find((integrante) => integrante.user.equals(user._id));
+      const alreadyInTeam = integrantes.find((integrante) =>
+        integrante.user.equals(user._id),
+      );
       if (alreadyInTeam) {
         console.log('El usuario está en el equipo');
         return alreadyInTeam.role;
@@ -75,41 +83,41 @@ export class EquipoService {
   }
 
   async join(_idTeam: string, _userEmail: string, _role: string) {
-    try{
+    try {
       const team = await this.equipoModel.findById(_idTeam);
-      if(!team){
+      if (!team) {
         console.log('Equipo no encontrado');
         throw new NotFoundException('Equipo no encontrado');
       }
       const user = await this.userService.findByEmail(_userEmail);
-      if(!user){
+      if (!user) {
         console.log('Usuario no encontrado');
         throw new NotFoundException('Usuario no encontrado');
       }
       const integrantes = team.integrantes;
 
-      if(integrantes && integrantes.length > 0){
+      if (integrantes && integrantes.length > 0) {
         console.log('El equipo tiene integrantes');
-        const alreadyInTeam = integrantes.some((integrante) => integrante.user.equals(user._id))
-        if(alreadyInTeam){
+        const alreadyInTeam = integrantes.some((integrante) =>
+          integrante.user.equals(user._id),
+        );
+        if (alreadyInTeam) {
           console.log('El usuario ya está en el equipo');
           throw ConflictException;
           return team;
         }
       }
 
-      if(integrantes){
-        integrantes.push({user: user._id, role: _role});
-      }
-      else{
-        team.integrantes = [{user: user._id, role: _role}];
+      if (integrantes) {
+        integrantes.push({ user: user._id, role: _role });
+      } else {
+        team.integrantes = [{ user: user._id, role: _role }];
       }
       await team.save();
-      user.equipos.push({equipoId: team._id, role: _role});
+      user.equipos.push({ equipoId: team._id, role: _role });
       await user.save();
       return team;
-
-    }catch(error){
+    } catch (error) {
       console.log(error);
       throw error;
     }
@@ -164,45 +172,42 @@ export class EquipoService {
     const user = await this.userService.findByIdd(userId);
 
     if (!user) {
-        console.log('Usuario no encontrado');
-        throw new NotFoundException('Usuario no encontrado');
+      console.log('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
     console.log('Usuario encontrado');
     const equipos = await this.equipoModel.find({ 'integrantes.user': userId });
 
     if (equipos.length === 0) {
-        console.log('No está en un equipo');
+      console.log('No está en un equipo');
     } else {
-        console.log('Equipos del usuario:', equipos);
+      console.log('Equipos del usuario:', equipos);
     }
 
     return equipos;
-}
+  }
 
   async findEquipoFromTrabajo(trabajoId: string): Promise<Equipo[]> {
-  console.log(`Buscando trabajo con ID: ${trabajoId}`);
-  const trabajo = await this.trabajoModel.findById(trabajoId);
-  
-  if (!trabajo) {
-    console.log('Trabajo no encontrado');
-    throw new NotFoundException('Trabajo no encontrado');
+    console.log(`Buscando trabajo con ID: ${trabajoId}`);
+    const trabajo = await this.trabajoModel.findById(trabajoId);
+
+    if (!trabajo) {
+      console.log('Trabajo no encontrado');
+      throw new NotFoundException('Trabajo no encontrado');
+    }
+
+    console.log(`Trabajo encontrado: ${trabajo.nombre}`);
+
+    try {
+      const equipo = await this.equipoModel.findOne({ trabajo: trabajoId });
+      console.log('Equipo en el trabajo:', equipo);
+      return equipo ? [equipo] : [];
+    } catch (error) {
+      console.error('Error al buscar equipos:', error);
+      throw error;
+    }
   }
-
-  console.log(`Trabajo encontrado: ${trabajo.nombre}`);
-
-  try {
-    const equipo = await this.equipoModel.findOne({ trabajo: trabajoId });
-    console.log('Equipo en el trabajo:', equipo);
-    return equipo ? [equipo] : [];
-  } catch (error) {
-    console.error('Error al buscar equipos:', error);
-    throw error;
-  }
-}
-
-  
-  
 
   async deleteTrabajoFromEquipo(_id: string): Promise<Equipo> {
     const equipo = await this.findById(_id);
@@ -214,28 +219,34 @@ export class EquipoService {
     return await equipo.save();
   }
 
-  async delete(_id: string): Promise<boolean> {
-    const deletedTeam = await this.findById(_id);
+  async delete(_idTeam: string, _idUsuario: string): Promise<boolean> {
+    const deletedTeam = await this.findById(_idTeam);
 
-    if(!deletedTeam){
+    if (!deletedTeam) {
       console.log('Equipo no encontrado');
       throw new NotFoundException('Equipo no encontrado');
     }
 
-    if(deletedTeam.integrantes && deletedTeam.integrantes.length > 0){
-      const users = await this.userService.findUsersByEquipoId(_id);
+    // debe verificar que el usuario con el _idUsuario tenga el rol de administrador
+    const role = await this.roleOnTeam(_idTeam, _idUsuario);
+    if (role !== 'Admin') {
+      console.log('No tiene permisos para eliminar el equipo');
+      throw new ConflictException('No tiene permisos para eliminar el equipo');
+    }
+
+    if (deletedTeam.integrantes && deletedTeam.integrantes.length > 0) {
+      const users = await this.userService.findUsersByEquipoId(_idTeam);
       await Promise.all(
         users.map(async (user) => {
-          this.userService.deleteEquipoFromUser(user._id, _id);
-        })
+          this.userService.deleteEquipoFromUser(user._id, _idTeam);
+        }),
       );
     }
-    
-    const deleted = await this.equipoModel.deleteOne({ _id: _id }).exec();
-    if(deleted.deletedCount === 1){
+
+    const deleted = await this.equipoModel.deleteOne({ _id: _idTeam }).exec();
+    if (deleted.deletedCount === 1) {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }

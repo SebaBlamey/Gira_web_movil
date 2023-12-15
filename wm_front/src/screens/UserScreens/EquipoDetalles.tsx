@@ -73,10 +73,12 @@ const EquipoDetalles: React.FC = () => {
       const usersData = await Promise.all(
         teamData.integrantes.map(async (integrante: Integrante) => {
           const userId = integrante.user;
+          console.log(`userId en EquipoDetalles: ${userId}`);
 
           const responseRole = await fetch(
-            `http://10.0.2.2:3000/${teamData._id}/${userId}/roleOnTeam`
+            `http://10.0.2.2:3000/equipo/${teamData._id}/${userId}/roleOnTeam`
           );
+          console.log(`response: ${responseRole.status}`);
           const role = responseRole.ok ? await responseRole.text() : "Miembro";
 
           // Obtener los detalles del usuario
